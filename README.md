@@ -1,7 +1,7 @@
 ->> Clone repository
 
 ```bash
-git clone https://github.com/Mandip698/Final_Project_5CS024.git
+git clone https://github.com/Mandip698/Project_5CS024.git
 ```
 
 ->> Create a Virtual environment using
