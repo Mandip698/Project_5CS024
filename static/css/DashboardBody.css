@@ -1,0 +1,37 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.table {
+    background-color: #0D1117;
+    color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-header {
+    background-color: #161B22;
+    color: #C9D1D9;
+}
+
+.table-row:hover {
+    background-color: #1E252D;
+}
+
+.icon-container {
+    background-color: #2EA043;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+}
+
+.badge {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 20px;
+}

@@ -1,0 +1,70 @@
+/* General Styles */
+body {
+    background-color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    padding: 10px 20px;
+}
+
+/* Search Container */
+.search-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.search-input {
+    width: 200px;
+    border-radius: 50px;
+    padding: 8px 40px 8px 15px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.search-btn {
+    position: absolute;
+    right: 5px;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    background-color: transparent;
+    color: #555;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-btn:hover {
+    background-color: #ddd;
+}
+
+/* Profile Button */
+.profile-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background-color: transparent;
+    font-size: 1.5rem;
+    color: #555;
+    cursor: pointer;
+}
+
+.profile-btn:hover {
+    color: black;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    min-width: 150px;
+}
+
+.dropdown-item i {
+    font-size: 1rem;
+}
