@@ -4,9 +4,10 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* Navbar */
 .navbar {
-    padding: 10px 20px;
+    display: flex;
+    justify-content: center; /* Centers the hyperlinks */
+    align-items: center;
 }
 
 /* Search Container */
@@ -43,6 +44,12 @@ body {
 .search-btn:hover {
     background-color: #ddd;
 }
+.search-bar {
+    width: 250px; /* Increase the width of the search bar */
+    height: 35px; /* Adjust height for better visibility */
+    border-radius: 8px; /* Optional: for rounded corners */
+    padding: 5px 10px;
+}
 
 /* Profile Button */
 .profile-btn {
@@ -68,3 +75,12 @@ body {
 .dropdown-item i {
     font-size: 1rem;
 }
+
+
+
+.nav-links {
+    display: flex;
+    gap: 20px; /* Adjust spacing between links */
+}
+
+
