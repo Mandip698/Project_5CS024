@@ -1,0 +1,20 @@
+body {
+    background-color: #f0f4f8;
+    font-family: Arial, sans-serif;
+}
+
+.footer {
+    background-color: #17436e;
+}
+
+.footer h5 {
+    color: #f8f9fa;
+}
+
+.footer p, .footer a {
+    color: #adb5bd;
+}
+
+.footer a:hover {
+    color: #0d6efd;
+}
