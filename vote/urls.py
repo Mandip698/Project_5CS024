@@ -1,8 +1,10 @@
 from django.urls import path
-from vote.views import home, verify_email, send_verification_email
+from vote.views import home,send_otp_via_email,verify_otp,resend_otp
 
 urlpatterns = [
     path('', home, name="home"),
-    path('verify/<uidb64>/<token>/', verify_email, name='verify_email'),
-    path("send-verification-email/<int:user_id>/", send_verification_email, name="send_verification_email"),
+
+    path("send-otp/",send_otp_via_email),
+    path('verify-otp/',verify_otp),
+    path('resend-otp/',resend_otp)
 ]

@@ -1,6 +1,7 @@
 import os
 import pickle
 import base64
+import random
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -12,6 +13,18 @@ from django.http import HttpResponse
 from django.utils.encoding import force_bytes
 from email.mime.text import MIMEText
 from vote.models import User
+from django.shortcuts import render
+
+import random
+from rest_framework.decorators import api_view
+
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializer import UserSerializer, VerifyAccountSerializer, LoginSerializer
+from rest_framework import status
+
+
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
@@ -42,6 +55,12 @@ def authenticate_gmail():
 
     return creds
 
+def home(request):
+    users = User.objects.all()
+    return render(request, 'vote/home.html', {'users': users})
+
+
+
 # ------------------- Gmail API Send Email -------------------
 def send_email(recipient, subject, body):
     """Sends an email using Gmail API."""
@@ -61,44 +80,163 @@ def send_email(recipient, subject, body):
         return HttpResponse("✅ Email sent successfully!")
     except Exception as e:
         return HttpResponse(f"❌ Error sending email: {e}")
+from django.views.decorators.csrf import csrf_exempt
 
 
-def home(request):
-    users = User.objects.all()
-    return render(request, 'vote/home.html', {'users': users})
 
+def generate_and_send_otp(email,subject, message):
+    otp = str(random.randint(100000, 999999))
+    sub = subject
+    msg = f"{message} {otp}\nUse this to verify your login."
 
-def verify_email(request, uidb64, token):
+    user = User.objects.filter(email=email).first()
+    if not user:
+        raise ValueError("User not found")
+
+    user.otp = otp
+    user.save()
+    send_email(email, sub, msg)
+
+import json
+from django.http import JsonResponse, HttpResponse
+@csrf_exempt
+def send_otp_via_email(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data.get("email")
+
+        try:
+            generate_and_send_otp(email, subject="OTP for VoteHala", message="Your OTP is:")
+            return JsonResponse({"message": "OTP sent successfully."})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid method"}, status=405)
+
+ 
+ 
+@api_view(['POST'])
+def verify_otp(request):
+    """Handle OTP verification."""
     try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
+        serializer = VerifyAccountSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            otp = serializer.validated_data['otp']
 
-    if user and default_token_generator.check_token(user, token):
-        user.is_email_verified = True
-        user.save()
-        return HttpResponse("Email verified successfully! You can now log in.")
-    else:
-        return HttpResponse("Invalid or expired link.")
+            user = User.objects.filter(email=email).first()
+            if not user:
+                return Response(
+                    {'status': 400, 'message': 'Invalid email'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            if user.otp != otp:  # Check if OTP matches
+                return Response(
+                    {'status': 400, 'message': 'Wrong OTP'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            user.is_otp_verified = True  # Mark OTP as verified
+            user.save()
+
+            return Response(
+                {'status': 200, 'message': 'OTP verified successfully! Redirecting to dashboard...'},
+                status=status.HTTP_200_OK
+            )
+
+        return Response(
+            {'status': 400, 'message': 'Validation failed', 'errors': serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    except Exception as e:
+        return Response(
+            {'status': 500, 'message': 'Internal server error', 'error': str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
-def send_verification_email(request, user_id):
+@api_view(['POST'])
+def resend_otp(request):
+    """Resend OTP to user's email."""
     try:
-        user = User.objects.get(pk=user_id)
-        if user.is_email_verified:
-            return HttpResponse("Your email is already verified.")
+        email = request.data.get('email')
+        if not email:
+            return Response({'status': 400, 'message': 'Email is required'}, status=400)
 
-        token = default_token_generator.make_token(user)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        verification_url = request.build_absolute_uri(f"/verify/{uid}/{token}/")
+        # Generate and send OTP
+        generate_and_send_otp(email, subject="New OTP Resend for VoteHala", message="Your new OTP is:")
+        return Response({'status': 200, 'message': 'New OTP sent successfully'}, status=200)
 
-        subject = "Verify Your Email"
-        message = f"Click the link to verify your email: {verification_url}"
+    except Exception as e:
+        return Response(
+            {'status': 500, 'message': 'Internal server error', 'error': str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        ) 
+ 
+        
+# class VerifyOTPViewSet(APIView):
+#     def post(self, request):
+#         """Handle OTP verification."""
+#         try:
+#             serializer = VerifyAccountSerializer(data=request.data)
+#             if serializer.is_valid():
+#                 email = serializer.validated_data['email']
+#                 otp = serializer.validated_data['otp']
 
-        send_email(user.email, subject, message)
+#                 user = User.objects.filter(email=email).first()
+#                 if not user:
+#                     return Response(
+#                         {'status': 400, 'message': 'Invalid email'},
+#                         status=status.HTTP_400_BAD_REQUEST
+#                     )
 
-        return HttpResponse("✅ Verification email sent! Check your inbox.")
+#                 if user.otp != otp:  # Check if OTP matches
+#                     return Response(
+#                         {'status': 400, 'message': 'Wrong OTP'},
+#                         status=status.HTTP_400_BAD_REQUEST
+#                     )
 
-    except User.DoesNotExist:
-        return HttpResponse("❌ User not found.", status=400)
+#                 user.is_otp_verified = True  # Mark OTP as verified
+#                 user.save()
+
+#                 # Redirecting to dashboard after successful OTP verification
+#                 return Response(
+#                     {'status': 200, 'message': 'OTP verified successfully! Redirecting to dashboard...'},
+#                     status=status.HTTP_200_OK
+#                 )
+
+#             return Response(
+#                 {'status': 400, 'message': 'Validation failed', 'errors': serializer.errors},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
+
+#         except Exception as e:
+#             return Response(
+#                 {'status': 500, 'message': 'Internal server error', 'error': str(e)},
+#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
+#             )
+
+# class ResendOTPViewSet(ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = VerifyAccountSerializer  # Reuse the OTP verification serializer
+#     http_method_names = ['post']  # Allow only POST requests
+
+#     def create(self, request, *args, **kwargs):
+#         try:
+#             email = request.data.get('email')
+#             if not email:
+#                 return Response({'status': 400, 'message': 'Email is required'}, status=400)
+
+#             generate_and_send_otp(email,subject = "New OTP Resend", message = "Your new OTP is:")
+#             return Response({'status': 200, 'message': 'New OTP sent successfully'}, status=200)
+
+#         except ValueError as ve:
+#             return Response({'status': 400, 'message': str(ve)}, status=400)
+#         except Exception as e:
+#             return Response({'status': 500, 'message': 'Internal server error', 'error': str(e)}, status=500)
+
+            
+            
+            
