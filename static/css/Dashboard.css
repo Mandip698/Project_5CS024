@@ -1,122 +1,22 @@
-/* Navbar Styling */
-.navbar {
-    background-color: #fdfefe !important; /* White */
-    padding: 10px 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-/* Navbar Brand (Logo or Text) */
-.navbar-brand {
-    font-size: 22px;
-    font-weight: bold;
-    color: rgb(12, 0, 0) !important;
-}
-
-/* Avatar Image */
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid white;
-}
-
-/* Dropdown Button */
-.dropdown .btn {
-    background-color: #51549e;
+.table {
+    /* background-color: #0D1117; */
+    color: black;
+    /* border-radius: 8px; */
+    overflow: hidden;
     border: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
 }
 
-/* On Hover */
-.dropdown .btn:hover {
-    background-color: #f9f9f9;
+.table-header {
+    /* background-color: #161B22; */
+    color: black;
 }
 
-/* Dropdown Menu */
-.dropdown-menu {
-    background-color: #ffffff;
-    border-radius: 8px;
-    min-width: 150px;
-}
+/* .table-row:hover {
+    background-color: #1E252D;
+} */
 
-/* Dropdown Items */
-.dropdown-menu .dropdown-item {
-    color: rgb(0, 0, 0);
-    padding: 10px;
-    transition: 0.3s;
-}
-
-/* Hover Effect on dropdown menu */
-.dropdown-menu .dropdown-item:hover {
-    background-color: #3f5771;
-    color: white;
-}
-
-.list-group {
-    max-width: 800px;
-    margin: 20px auto;
-}
-
-/* Individual Poll Item */
-.list-group-item {
-    background-color: #1e1e1e; /* Dark background */
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Hover Effect */
-.list-group-item:hover {
-    background-color: #2a2a2a;
-    transform: scale(1.02);
-}
-
-/* Poll Icon */
-.poll-icon {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-}
-
-/* Poll Title & Details */
-.poll-details {
-    display: flex;
-    align-items: center;
-}
-
-.poll-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-
-.poll-meta span {
-    font-size: 14px;
-    color: #b0b0b0;
-}
-
-/* Status Styles */
-.status {
+.badge {
+    padding: 5px 10px;
     font-size: 12px;
-    font-weight: bold;
-    padding: 4px 8px;
-    border-radius: 5px;
-    text-transform: uppercase;
-}
-
-.status.active {
-    background-color: #28a745; /* Green */
-    color: white;
-}
-
-.status.closed {
-    background-color: #dc3545; /* Red */
-    color: white;
+    border-radius: 20px;
 }
