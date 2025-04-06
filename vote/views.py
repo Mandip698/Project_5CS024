@@ -15,6 +15,16 @@ from vote.models import User
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
+
+def index(request):
+    users = User.objects.all()
+    return render(request, 'vote/index.html', {'users': users})
+
+
+def dashboard(request):
+    return render(request, 'vote/dashboard.html')
+
+
 # ------------------- Gmail Authentication -------------------
 def authenticate_gmail():
     creds = None
@@ -61,11 +71,6 @@ def send_email(recipient, subject, body):
         return HttpResponse("✅ Email sent successfully!")
     except Exception as e:
         return HttpResponse(f"❌ Error sending email: {e}")
-
-
-def home(request):
-    users = User.objects.all()
-    return render(request, 'vote/home.html', {'users': users})
 
 
 def verify_email(request, uidb64, token):

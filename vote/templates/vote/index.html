@@ -1,0 +1,9 @@
+{% extends 'main.html' %} {% block content %} {% load static %}
+<div id="hero-section">
+    <div class="container">
+        <h1 class="hero-title">Your Vote, Your Voice</h1>
+        <p class="hero-subtitle">Secure, Transparent & Reliable Online Voting System</p>
+        <a href="{% url 'dashboard' %}" class="btn btn-light btn-custom">Vote Now</a>
+    </div>
+</div>
+{% endblock %}
