@@ -1,0 +1,189 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.container {
+    text-align: center;
+}
+
+.login-box {
+    background: white;
+    padding: 70px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid black; /* Add black border */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Slight shadow for effect */
+}
+
+
+.logo {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+
+
+h2 {
+    margin: 0 0 10px;
+    color: #333;
+    font-size: 24px;
+}
+
+p {
+    margin: 0 0 20px;
+    color: #007bff;
+}
+
+p a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+/* Add spacing between email and password fields */
+input[type="email"] {
+    margin-bottom: 25px; /* Adjust gap between email and password */
+}
+
+/* Ensure both input fields have the same size */
+input[type="email"],
+.password-container input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    height: 50px;
+}
+
+/* Ensure both input fields (email & password) have the same size */
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* Keep the password container unchanged */
+.password-container {
+    position: relative;
+    width: 100%;
+    
+}
+
+/* Make sure the password input matches the email input */
+.password-container input {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* Ensure the "Show" button does not change the box */
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+    background: none;
+    border: none;
+    padding: 5px;
+}
+
+
+label {
+    display: flex;
+    align-items: center;
+    margin: 20px 0; /* Increased margin to move it down */
+    font-size: 14px;
+}
+
+label input {
+    margin-right: 10px; /* Slightly increased space between checkbox and text */
+    transform: scale(1.2); /* Increase the size of the checkbox */
+}
+
+
+.forgot-password {
+    font-size: 15px;
+    color: #007bff;
+    text-decoration: none;
+    align-self: flex-end;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button[type="submit"] {
+    background-color: #ffc107;
+    color: white;
+    margin: 20px 0;
+}
+
+.social-login {
+    margin-top: 20px;
+}
+
+.social-login p {
+    margin: 0 0 10px;
+    color: #666;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.google {
+    background-color: white;
+    color: #757575;
+    border: 1px solid #ccc;
+    flex: 1;
+    margin-right: 5px;
+}
+
+.facebook {
+    background-color: #3b5998;
+    color: white;
+    flex: 1;
+    margin-left: 5px;
+}
+
+.vertical-line {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 1px;
+    background-color: #ccc;
+}

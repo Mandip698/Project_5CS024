@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f8f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 500px;
+            background-color: #f8f8f8;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-button {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: #000;
+            cursor: pointer;
+        }
+        
+        .order-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+        
+        .verification-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+        }
+        
+        .verification-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        
+        .verification-text {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            background-color: transparent;
+            text-align: center;
+        }
+        
+        .proceed-button {
+            background-color: #b3d136;
+            color: #fff;
+            border: none;
+            padding: 10px 40px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .resend-text {
+            color: #666;
+            font-size: 0.9rem;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .seconds {
+            color: #b3d136;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-button">←</div>
+        <div class="order-title">Order</div>
+        
+        <div class="verification-container">
+            <h2 class="verification-title">Verification</h2>
+            <p class="verification-text">An otp has been sent to your registered email address, kindly input it and proceed.</p>
+            
+            <div class="otp-container">
+                <input type="text" class="otp-input" maxlength="1" id="otp1">
+                <input type="text" class="otp-input" maxlength="1" id="otp2">
+                <input type="text" class="otp-input" maxlength="1" id="otp3">
+                <input type="text" class="otp-input" maxlength="1" id="otp4">
+                <input type="text" class="otp-input" maxlength="1" id="otp5">
+            </div>
+            
+            <button class="proceed-button">Proceed</button>
+            
+            <p class="resend-text">
+                If the verification code has not been received, kindly<br>
+                wait for <span class="seconds">60 Seconds</span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-focus next input when a digit is entered
+        const otpInputs = document.querySelectorAll('.otp-input');
+        
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                
+                if (value.length === 1 && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+            });
+            
+            // Handle backspace
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+        
+        // Countdown timer
+        let seconds = 60;
+        const secondsElement = document.querySelector('.seconds');
+        
+        const countdown = setInterval(() => {
+            seconds--;
+            secondsElement.textContent = seconds + ' Seconds';
+            
+            if (seconds <= 0) {
+                clearInterval(countdown);
+                secondsElement.textContent = 'Resend OTP';
+                secondsElement.style.cursor = 'pointer';
+                secondsElement.addEventListener('click', () => {
+                    // Reset timer
+                    seconds = 60;
+                    secondsElement.textContent = seconds + ' Seconds';
+                    secondsElement.style.cursor = 'default';
+                    
+                    // Start countdown again
+                    const newCountdown = setInterval(() => {
+                        seconds--;
+                        secondsElement.textContent = seconds + ' Seconds';
+                        
+                        if (seconds <= 0) {
+                            clearInterval(newCountdown);
+                            secondsElement.textContent = 'Resend OTP';
+                            secondsElement.style.cursor = 'pointer';
+                        }
+                    }, 1000);
+                    
+                    // Here you would typically call an API to resend the OTP
+                    alert('OTP resent!');
+                });
+            }
+        }, 1000);
+        
+        // Handle Proceed button click
+        document.querySelector('.proceed-button').addEventListener('click', () => {
+            let otp = '';
+            otpInputs.forEach(input => {
+                otp += input.value;
+            });
+            
+            if (otp.length === 5) {
+                // Here you would typically validate the OTP with your backend
+                alert('OTP submitted: ' + otp);
+            } else {
+                alert('Please enter all 5 digits of the OTP');
+            }
+        });
+        
+        // Handle back button click
+        document.querySelector('.back-button').addEventListener('click', () => {
+            // Here you would typically navigate back to the previous page
+            alert('Going back to previous page');
+        });
+    </script>
+</body>
+</html>
