@@ -44,8 +44,6 @@ class UserAdmin(admin.ModelAdmin):
         return HttpResponseRedirect("../")
 
 
-
-
 # Inline for managing Options inside Poll
 class OptionsInline(admin.TabularInline):
     model = Option
@@ -72,8 +70,8 @@ class PollAdmin(admin.ModelAdmin):
     )
     def save_model(self, request, obj, form, change):
         if not change:
-            obj.created_by = request.user.username
-        obj.updated_by = request.user.username
+            obj.created_by = request.user
+        obj.updated_by = request.user
         super().save_model(request, obj, form, change)
         
         

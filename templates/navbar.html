@@ -30,6 +30,7 @@
                     <li><a class="dropdown-item" href="{% url 'logout' %}">Log Out</a></li>
                 </ul>
             </div>
+            <h4>{{ user.username }}</h4>
             {% else %}
             <a class="btn btn-success btn-lg" href="{% url 'login_view' %}">Login</a>
             {% endif %}

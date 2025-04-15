@@ -31,7 +31,8 @@ def index(request):
 
 
 def dashboard(request):
-    return render(request, 'vote/dashboard.html')
+    polls = Poll.objects.all().order_by('-created_on')
+    return render(request, 'vote/dashboard.html', {'polls': polls})
 
 
 def login_view(request):

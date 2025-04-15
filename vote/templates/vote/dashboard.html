@@ -1,15 +1,14 @@
 {% extends 'main.html' %} {% block content %} {% load static %}
 <div class="container my-5">
-
     <div class="table-responsive">
         <table
             id="table"
-            class="table table-borderless rounded"
+            class="table table-borderless table-striped table-hover"
             data-pagination="true"
             data-show-toggle="true"
+            data-card-view="true"
             data-search="true"
             data-show-jump-to="true"
-            {% comment %} data-url = "{{ url('vote:polls') }}" {% endcomment %}
             data-side-pagination="client"
         >
             <thead>
@@ -20,342 +19,28 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="table-row text-center">
+                {% for poll in polls %}
+                <tr class="table-row text-center" data-url="{% url 'vote_poll' poll.id %}">
                     <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
+                        <strong>{{ poll.topic }}</strong><br />
+                        <small>{{ poll.description }}</small>
                     </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
+                    <td>{{ poll.end_date|date:"F d, Y g:i A" }}</td>
                     <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
+                        {% if poll.status == "live" %}
+                        <span class="badge bg-success">Live</span>
+                        {% elif poll.status == "closed" %}
+                        <span class="badge bg-danger">Closed</span>
+                        {% elif poll.status == "pending" %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                        {% endif %}
                     </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
                 </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
+                {% empty %}
+                <tr class="text-center">
+                    <td colspan="3">No polls available.</td>
                 </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-danger">Closed</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
-                <tr class="table-row text-center">
-                    <td>
-                        <strong>President Poll</strong></br>
-                        <small>Description</small>
-                    </td>
-                    <td>March 16, 2025 8:48 AM</td>
-                    <td><span class="badge bg-success">Active</span></td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

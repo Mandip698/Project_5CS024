@@ -54,3 +54,8 @@
 .navbar .btn:hover {
     opacity: 0.9;
 }
+
+.navbar h4 {
+    margin: 5px;
+    color: white;
+}
