@@ -1,0 +1,15 @@
+.footer {
+    background-color: #17436e;
+}
+
+.footer h4 {
+    color: #f8f9fa;
+}
+
+.footer p {
+    color: #adb5bd;
+}
+
+.footer-btn:hover {
+    color: #0d6efd !important;
+}

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Votezilla - Poll Results</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #333333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .logo-container {
+      margin: 20px 0;
+      width: 100px;
+      height: 100px;
+      background-color: #283c8c;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffcc00;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 900px;
+      padding: 30px;
+      border: 1px solid #2c5282;
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .card-description {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    @media (min-width: 768px) {
+      .content-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .radio-input {
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .option-label {
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .vote-button {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #ecc94b;
+      color: black;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .vote-button:hover {
+      background-color: #d6b636;
+    }
+
+    .vote-button:disabled {
+      background-color: #e2e8f0;
+      color: #a0aec0;
+      cursor: not-allowed;
+    }
+
+    .reset-button {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #e2e8f0;
+      color: #4a5568;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .reset-button:hover {
+      background-color: #cbd5e0;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+
+    .results-container {
+      display: none;
+    }
+
+    .result-bar {
+      margin-bottom: 15px;
+    }
+
+    .result-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .result-name {
+      font-weight: 500;
+    }
+
+    .result-votes {
+      color: #666;
+    }
+
+    .progress-bar {
+      height: 8px;
+      width: 100%;
+      background-color: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .total-votes {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+  <!-- Include Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="logo-container">
+    VOTE<br>हाल
+  </div>
+  
+  <div class="card">
+    <div class="card-header">
+      <h1 class="card-title">Who would you pick as the best candidate?</h1>
+      <p class="card-description" id="card-description">Select an option and cast your vote to see results.</p>
+    </div>
+    
+    <div class="content-grid">
+      <div class="options-container">
+        <div id="voting-form">
+          <div class="option">
+            <input type="radio" id="option1" name="poll-option" value="1" class="radio-input">
+            <label for="option1" class="option-label">Ankit</label>
+          </div>
+          <div class="option">
+            <input type="radio" id="option2" name="poll-option" value="2" class="radio-input">
+            <label for="option2" class="option-label">Aryush</label>
+          </div>
+          <div class="option">
+            <input type="radio" id="option3" name="poll-option" value="3" class="radio-input">
+            <label for="option3" class="option-label">Mandip</label>
+          </div>
+          <div class="option">
+            <input type="radio" id="option4" name="poll-option" value="4" class="radio-input">
+            <label for="option4" class="option-label">Durga</label>
+          </div>
+          <div class="option">
+            <input type="radio" id="option5" name="poll-option" value="5" class="radio-input">
+            <label for="option5" class="option-label">Jesmine</label>
+          </div>
+          
+          <button id="vote-button" class="vote-button" disabled>Cast Vote</button>
+        </div>
+        
+        <div id="results-container" class="results-container">
+          <!-- Results bars will be inserted here by JavaScript -->
+          
+          <button id="reset-button" class="reset-button">Reset Poll (Demo)</button>
+        </div>
+        
+        <div class="total-votes" id="total-votes"></div>
+      </div>
+      
+      <div class="chart-container">
+        <canvas id="results-chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Poll data
+      const pollData = {
+        question: "What's your favorite programming language?",
+        options: [
+          { id: 1, name: "Ankit", votes: 0, color: "#F7DF1E" },
+          { id: 2, name: "Aryush", votes: 0, color: "#3776AB" },
+          { id: 3, name: "Mandip", votes: 0, color: "#007396" },
+          { id: 4, name: "Durga", votes: 0, color: "#68217A" },
+          { id: 5, name: "Jesmine", votes: 0, color: "#00ADD8" },
+        ]
+      };
+      
+      // DOM elements
+      const voteButton = document.getElementById('vote-button');
+      const resetButton = document.getElementById('reset-button');
+      const votingForm = document.getElementById('voting-form');
+      const resultsContainer = document.getElementById('results-container');
+      const cardDescription = document.getElementById('card-description');
+      const totalVotesElement = document.getElementById('total-votes');
+      
+      // Chart variables
+      let resultsChart;
+      let userVoted = false;
+      
+      // Initialize the chart with initial data
+      initializeChart();
+      updateTotalVotes();
+      
+      // Enable vote button when an option is selected
+      const radioButtons = document.querySelectorAll('input[name="poll-option"]');
+      radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+          voteButton.disabled = false;
+        });
+      });
+      
+      // Handle vote button click
+      voteButton.addEventListener('click', function() {
+        const selectedOption = document.querySelector('input[name="poll-option"]:checked');
+        if (!selectedOption) return;
+        
+        const optionId = parseInt(selectedOption.value);
+        
+        // Update vote count
+        pollData.options = pollData.options.map(option => {
+          if (option.id === optionId) {
+            return { ...option, votes: option.votes + 1 };
+          }
+          return option;
+        });
+        
+        // Show results
+        userVoted = true;
+        showResults();
+        updateChart();
+        updateTotalVotes();
+        
+        // Update description
+        cardDescription.textContent = "Thank you for voting! Here are the current results.";
+      });
+      
+      // Handle reset button click (for demo purposes)
+      resetButton.addEventListener('click', function() {
+        // Reset to initial state
+        pollData.options = [
+           { id: 1, name: "Ankit", votes: 0, color: "#F7DF1E" },
+          { id: 2, name: "Aryush", votes: 0, color: "#3776AB" },
+          { id: 3, name: "Mandip", votes: 0, color: "#007396" },
+          { id: 4, name: "Durga", votes: 0, color: "#68217A" },
+          { id: 5, name: "Jesmine", votes: 0, color: "#00ADD8" },
+        ];
+        
+        userVoted = false;
+        showVotingForm();
+        updateChart();
+        updateTotalVotes();
+        
+        // Reset radio buttons
+        radioButtons.forEach(radio => {
+          radio.checked = false;
+        });
+        voteButton.disabled = true;
+        
+        // Update description
+        cardDescription.textContent = "Select an option and cast your vote to see results.";
+      });
+      
+      // Initialize the chart
+      function initializeChart() {
+        const ctx = document.getElementById('results-chart').getContext('2d');
+        
+        resultsChart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: pollData.options.map(option => option.name),
+            datasets: [{
+              data: pollData.options.map(option => option.votes),
+              backgroundColor: pollData.options.map(option => option.color),
+              borderColor: 'white',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  padding: 20,
+                  font: {
+                    size: 12
+                  }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.raw || 0;
+                    const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                    const percentage = Math.round((value / total) * 100);
+                    return `${label}: ${value} votes (${percentage}%)`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+      
+      // Update the chart with new data
+      function updateChart() {
+        resultsChart.data.datasets[0].data = pollData.options.map(option => option.votes);
+        resultsChart.update();
+      }
+      
+      // Show results view
+      function showResults() {
+        votingForm.style.display = 'none';
+        resultsContainer.style.display = 'block';
+        
+        // Clear previous results
+        resultsContainer.innerHTML = '';
+        
+        // Calculate total votes
+        const totalVotes = pollData.options.reduce((sum, option) => sum + option.votes, 0);
+        
+        // Create result bars
+        pollData.options.forEach(option => {
+          const percentage = Math.round((option.votes / totalVotes) * 100);
+          
+          const resultBar = document.createElement('div');
+          resultBar.className = 'result-bar';
+          
+          resultBar.innerHTML = `
+            <div class="result-info">
+              <span class="result-name">${option.name}</span>
+              <span class="result-votes">${option.votes} votes (${percentage}%)</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${percentage}%; background-color: ${option.color}"></div>
+            </div>
+          `;
+          
+          resultsContainer.appendChild(resultBar);
+        });
+        
+        // Add reset button
+        const resetBtn = document.createElement('button');
+        resetBtn.id = 'reset-button';
+        resetBtn.className = 'reset-button';
+        resetBtn.textContent = 'Reset Poll (Demo)';
+        resetBtn.addEventListener('click', function() {
+          // Reset to initial state
+          pollData.options = [
+         { id: 1, name: "Ankit", votes: 0, color: "#F7DF1E" },
+          { id: 2, name: "Aryush", votes: 0, color: "#3776AB" },
+          { id: 3, name: "Mandip", votes: 0, color: "#007396" },
+          { id: 4, name: "Durga", votes: 0, color: "#68217A" },
+          { id: 5, name: "Jesmine", votes: 0, color: "#00ADD8" },
+          ];
+          
+          userVoted = false;
+          showVotingForm();
+          updateChart();
+          updateTotalVotes();
+          
+          // Reset radio buttons
+          document.querySelectorAll('input[name="poll-option"]').forEach(radio => {
+            radio.checked = false;
+          });
+          voteButton.disabled = true;
+          
+          // Update description
+          cardDescription.textContent = "Select an option and cast your vote to see results.";
+        });
+        
+        resultsContainer.appendChild(resetBtn);
+      }
+      
+      // Show voting form
+      function showVotingForm() {
+        resultsContainer.style.display = 'none';
+        votingForm.style.display = 'block';
+      }
+      
+      // Update total votes display
+      function updateTotalVotes() {
+        const totalVotes = pollData.options.reduce((sum, option) => sum + option.votes, 0);
+        totalVotesElement.textContent = `Total votes: ${totalVotes}`;
+      }
+    });
+  </script>
+</body>
+</html>

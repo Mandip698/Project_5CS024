@@ -21,12 +21,16 @@ class User(AbstractUser):
     
 class Poll(models.Model):
 
-
+    STATUS_CHOICES = [
+    ('live', 'Live'),
+    ('closed', 'Closed'),
+    ('pending', 'Pending'),
+    ]
     topic = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True, null=True)  
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    status = models.CharField(max_length=50,null= True, blank = True)
+    status = models.CharField(max_length=50,choices=STATUS_CHOICES, default='live')
     created_by = models.CharField(max_length=200)
     updated_by = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -36,10 +40,7 @@ class Options(models.Model):
     poll_id = models.ForeignKey('Poll', on_delete=models.CASCADE)
     option_name = models.CharField(max_length=255)
     manifesto = models.TextField(blank=True, null=True)  #agenda
-    email = models.EmailField(blank=True, null=True)
-    # votes_count = models.PositiveIntegerField(default=0) 
-    created_by = models.CharField(max_length=200)
-    updated_by = models.CharField(max_length=200)
+
     created_at = models.DateTimeField(auto_now_add=True)
     
     

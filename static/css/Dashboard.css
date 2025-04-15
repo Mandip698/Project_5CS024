@@ -1,0 +1,22 @@
+.table {
+    /* background-color: #0D1117; */
+    color: black;
+    /* border-radius: 8px; */
+    overflow: hidden;
+    border: none;
+}
+
+.table-header {
+    /* background-color: #161B22; */
+    color: black;
+}
+
+/* .table-row:hover {
+    background-color: #1E252D;
+} */
+
+.badge {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 20px;
+}
