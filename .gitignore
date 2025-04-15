@@ -7,3 +7,5 @@ token.pickle
 vote/migrations/*
 vote/__pycache__
 voting_app/__pycache__/*
+vote/management/commands/__pycache__/*
+UserData.xlsx

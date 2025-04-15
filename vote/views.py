@@ -1,39 +1,63 @@
 import os
+import json
 import pickle
 import base64
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from django.shortcuts import render
-from django.contrib.auth import get_user_model
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.http import HttpResponse
-from django.utils.encoding import force_bytes
-from email.mime.text import MIMEText
-from vote.models import User
-from django.http import JsonResponse
-from django.views.decorators.http import require_GET
-from django.utils import timezone
-from django.utils.dateparse import parse_datetime
-from django.contrib.auth import login
+import random
+from .forms import VoteForm
 from datetime import timedelta
-from django.shortcuts import redirect
-import json
+from django.conf import settings
+from django.utils import timezone
+from django.contrib import messages
+from email.mime.text import MIMEText
+from django.http import JsonResponse
+from googleapiclient.discovery import build
+from vote.models import User, UserVote, Poll
+from django.contrib.auth import authenticate, login, logout
+from django.utils.encoding import force_bytes
+from django.utils.dateparse import parse_datetime
+from google.auth.transport.requests import Request
+from django.views.decorators.http import require_GET
+from google_auth_oauthlib.flow import InstalledAppFlow
+from django.contrib.auth.tokens import default_token_generator
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode 
 
-SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
+
+SCOPES = settings.GMAIL_SCOPES
 
 
 def index(request):
-    users = User.objects.all()
-    return render(request, 'vote/index.html', {'users': users})
+    return render(request, 'vote/index.html')
 
 
 def dashboard(request):
     return render(request, 'vote/dashboard.html')
 
 
-# ------------------- Gmail Authentication -------------------
+def login_view(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return render(request, 'vote/login.html', {"error": "User not found."})
+
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            generate_otp(request, user.id)
+            user_id = request.session.get("otp_user_id")
+            uid = request.session.get("otp_uid")
+            token = request.session.get("otp_token")
+
+            if not user_id or not uid or not token:
+                return redirect('login')
+            return render(request, 'vote/login.html', { 'show_otp_modal': True, 'uid': uid, 'token': token })
+        else:
+            return render(request, 'vote/login.html', {"error": "Invalid credentials"})
+    return render(request, 'vote/login.html')
+
+
 def authenticate_gmail():
     creds = None
     token_path = "token.pickle"
@@ -74,7 +98,7 @@ def send_email(recipient, subject, body):
     except Exception as e:
         return JsonResponse({"error": f"Error sending email: {e}"})
 
-import random
+
 def generate_otp(request, user_id):
     try:
         user = User.objects.get(pk=user_id)
@@ -159,3 +183,29 @@ def resend_otp(request):
         return JsonResponse({"message": "OTP resent successfully!"})
     except Exception as e:
         return JsonResponse({"error": f"Failed to resend OTP. {str(e)}"}, status=400)
+
+
+def vote_poll(request, poll_id):
+    poll = get_object_or_404(Poll, id=poll_id)
+    if UserVote.objects.filter(poll=poll, user=request.user).exists():
+        messages.warning(request, "You have already voted in this poll.")
+        return redirect('poll_detail', poll_id=poll.id)
+    if request.method == 'POST':
+        form = VoteForm(request.POST, poll=poll)
+        if form.is_valid():
+            selected_option = form.cleaned_data['option']
+            UserVote.objects.create(
+                poll=poll,
+                user=request.user,
+                option=selected_option
+            )
+            messages.success(request, "Your vote has been recorded.")
+            return redirect('poll_detail', poll_id=poll.id)
+    else:
+        form = VoteForm(poll=poll)
+    return render(request, 'polls/vote_poll.html', {'poll': poll, 'form': form})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')

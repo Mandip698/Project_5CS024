@@ -48,19 +48,16 @@ INSTALLED_APPS = [
     'vote.apps.VoteConfig',
 ]
 
+
 JAZZMIN_SETTINGS = {
     "login_logo": None,  
-   
     "login_logo_dark": None,
-
     "site_header": "Voteहालः", 
     "site_logo": "images/LOGO1.png",
     "site_logo_classes": "img-circle", 
-    "site_brand": "VoteHala", 
-    "copyright": "© 2025 VoteHala",
-
+    "site_brand": "Voteहालः", 
+    "copyright": "© 2025 Voteहालः",
     "show_ui_builder": True,
-
     # App and model icons
     "icons": {
         "vote.User": "fas fa-user",
@@ -81,16 +78,12 @@ JAZZMIN_SETTINGS = {
     
 }
 
+
 JAZZMIN_UI_TWEAKS = {
-
     "brand_colour": "navbar-primary",
-
     "navbar": "navbar-primary navbar-dark",
-
     "navbar_fixed": True,
-
     "sidebar": "sidebar-dark-primary",
-
     "theme": "superhero",
     "button_classes": {
         "primary": "btn-primary",
@@ -104,11 +97,6 @@ JAZZMIN_UI_TWEAKS = {
     "body_small_text": False,
     "login_bg": None,  # make sure no massive image is pushing layout
     "dark_mode_theme": "superhero",
- 
-    
-
-
-
 }
 
 AUTH_USER_MODEL = 'vote.User'
@@ -218,10 +206,4 @@ MEDIA_ROOT = BASE_DIR / 'static/images'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp-relay.brevo.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.getenv("EMAIL_USER")
-# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASS")
+GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
