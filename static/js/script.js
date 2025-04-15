@@ -52,6 +52,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+document.querySelectorAll("tr[data-url]").forEach((row) => {
+    row.style.cursor = "pointer";
+    row.addEventListener("click", () => {
+        window.location.href = row.dataset.url;
+    });
+});
+
 // document.getElementById("otpForm").addEventListener("submit", function (event) {
 //     event.preventDefault();
 //     const otp = document.getElementById("otp").value;
