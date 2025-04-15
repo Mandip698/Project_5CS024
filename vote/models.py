@@ -1,57 +1,60 @@
-from email.policy import default
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-# Create your models here.
-
-
 class User(AbstractUser):
+    """
+    Custom user model using email for authentication,
+    with additional fields for avatar and voter ID verification.
+    """
     email = models.EmailField(unique=True, null=True)
     avatar = models.ImageField(null=True, default="avatar.svg")
-    # is_email_verified = models.BooleanField(default=False)
-    name = models.CharField(max_length= 200,null=True, blank=True)
-    unique_id = models.CharField(max_length=50, unique=True, null=True, blank=True) 
-    
-    otp = models.CharField(max_length=6, null=True, blank=True) 
-    is_otp_verified = models.BooleanField(default=False)
+    middle_name = models.CharField(max_length=100, null=True, blank=True)
+    voter_id = models.CharField(max_length=100, unique=True, null=True, blank=True) 
+    voter_id_image = models.ImageField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username','unique_id']
-    
-class Poll(models.Model):
+    REQUIRED_FIELDS = ['username','first_name','last_name', 'voter_id']
 
+
+class Poll(models.Model):
+    """
+    Represents a poll/question with multiple options.
+    """
     STATUS_CHOICES = [
     ('live', 'Live'),
     ('closed', 'Closed'),
     ('pending', 'Pending'),
     ]
-    topic = models.CharField(max_length=255, unique=True)
+    topic = models.CharField(max_length=255, unique=True, null=True, blank=True)
     description = models.TextField(blank=True, null=True)  
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=50,choices=STATUS_CHOICES, default='live')
-    created_by = models.CharField(max_length=200)
-    updated_by = models.CharField(max_length=200)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-class Options(models.Model):
-    poll_id = models.ForeignKey('Poll', on_delete=models.CASCADE)
-    option_name = models.CharField(max_length=255)
-    manifesto = models.TextField(blank=True, null=True)  #agenda
+    created_on = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    updated_on = models.DateTimeField(auto_now=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='poll_updated_by')
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    
-class UserVotes(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    poll_id = models.ForeignKey('Poll', on_delete=models.CASCADE)
-    option_id = models.ForeignKey('Options', null=True,on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)  # When the vote was cast
-    
-    created_by = models.CharField(max_length=200)
-    updated_by = models.CharField(max_length=200)
-    
 
-    
+class Option(models.Model):
+    """
+    Represents a single option/choice under a poll.
+    """
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    option_text = models.CharField(max_length=255)
+
+
+class UserVote(models.Model):
+    """
+    Records a user's vote for a specific option in a poll.
+    """
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    option = models.ForeignKey(Option, null=True,on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['poll', 'user'], name='unique_vote_per_user_per_poll')
+        ]

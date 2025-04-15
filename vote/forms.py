@@ -3,6 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from .models import Option, Poll, UserVote
 
 User = get_user_model()
 
@@ -13,3 +14,18 @@ User = get_user_model()
 #             verify_button = f'<br><a href="{verify_url}" class="button">Resend Verification Email</a>'
 #             raise forms.ValidationError(
 #                 mark_safe(f"Your email is not verified. {verify_button}"), code="email_not_verified")
+
+
+class VoteForm(forms.Form):
+    option = forms.ModelChoiceField(
+        queryset=Option.objects.none(),
+        widget=forms.RadioSelect,
+        empty_label=None,
+        required=True,
+        label="Choose an option to vote"
+    )
+
+    def __init__(self, *args, **kwargs):
+        poll = kwargs.pop('poll')
+        super().__init__(*args, **kwargs)
+        self.fields['option'].queryset = poll.options.all()
