@@ -5,9 +5,9 @@ from django.contrib.admin import AdminSite
 from .models import User, Poll, Options, UserVotes
 
 
-admin.site.site_header = "VoteHala"
-admin.site.site_title = "Welcome to VoteHala Admin Area"
-admin.site.index_title = "VoteHala Admin Area"
+admin.site.site_header = "Voteहालः"
+admin.site.site_title = "Voteहालः Admin Area"
+admin.site.index_title = "Voteहालः Admin Area"
 
 
 # Inline for managing Options inside Poll
@@ -41,7 +41,7 @@ class PollAdmin(admin.ModelAdmin):
         
         # print("name:", request.user.name)
         # print("username:", request.user.username)
-        # print("email:", request.user.email)
+        # print("email:", request.user.email)OT
         # print("get_username:", request.user.get_username())
 
 
@@ -58,6 +58,9 @@ class OptionsAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         
         
+# Registering the models
+admin.site.register(User)
+admin.site.register(Poll, PollAdmin)
 
 
  
@@ -68,9 +71,6 @@ class OptionsAdmin(admin.ModelAdmin):
 #     search_fields = ('user_id__email', 'poll_id__topic', 'option_id__option_name')
 #     list_filter = ('poll_id', 'option_id')
 
-# Registering the models
-admin.site.register(User)
-admin.site.register(Poll, PollAdmin)
 # admin.site.register(Options, OptionsAdmin)
 # admin.site.register(UserVotes, UserVotesAdmin)
 

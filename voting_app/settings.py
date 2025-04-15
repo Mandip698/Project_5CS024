@@ -49,8 +49,12 @@ INSTALLED_APPS = [
 ]
 
 JAZZMIN_SETTINGS = {
+    "login_logo": None,  
+   
+    "login_logo_dark": None,
 
-    "site_logo": "images/logo.png",
+    "site_header": "Voteहालः", 
+    "site_logo": "images/LOGO1.png",
     "site_logo_classes": "img-circle", 
     "site_brand": "VoteHala", 
     "copyright": "© 2025 VoteHala",
@@ -74,6 +78,7 @@ JAZZMIN_SETTINGS = {
         "vote.UserVotes",
     ],
     
+    
 }
 
 JAZZMIN_UI_TWEAKS = {
@@ -95,6 +100,13 @@ JAZZMIN_UI_TWEAKS = {
         "danger": "btn-danger",
         "success": "btn-outline-success"
     },
+    # optional, for custom branding
+    "body_small_text": False,
+    "login_bg": None,  # make sure no massive image is pushing layout
+    "dark_mode_theme": "superhero",
+ 
+    
+
 
 
 }
