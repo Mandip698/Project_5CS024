@@ -12,6 +12,14 @@ from django.http import HttpResponse
 from django.utils.encoding import force_bytes
 from email.mime.text import MIMEText
 from vote.models import User
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
+from django.contrib.auth import login
+from datetime import timedelta
+from django.shortcuts import redirect
+import json
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
@@ -28,82 +36,126 @@ def dashboard(request):
 # ------------------- Gmail Authentication -------------------
 def authenticate_gmail():
     creds = None
-
-    print("Checking for existing token...")
-    if os.path.exists("token.pickle"):
-        # print("Found existing token.pickle")
-        with open("token.pickle", "rb") as token:
+    token_path = "token.pickle"
+    # Load existing credentials
+    if os.path.exists(token_path):
+        with open(token_path, "rb") as token:
             creds = pickle.load(token)
-
+    # If there are no valid credentials, handle login
     if not creds or not creds.valid:
-        # print("Credentials not found or expired. Refreshing...")
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
-            # print("Token refreshed successfully.")
+            #Save the refreshed token
+            with open(token_path, "wb") as token:
+                pickle.dump(creds, token)
         else:
-            # print("Launching OAuth flow...")
             flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
-            creds = flow.run_local_server(port=8080, authorization_prompt_message="")
-            # print("Authentication successful!")
-
-        with open("token.pickle", "wb") as token:
-            pickle.dump(creds, token)
-            # print("Token saved!")
-
+            creds = flow.run_local_server(port=8080)
+            # Save the new token
+            with open(token_path, "wb") as token:
+                pickle.dump(creds, token)
     return creds
 
-# ------------------- Gmail API Send Email -------------------
+
 def send_email(recipient, subject, body):
     """Sends an email using Gmail API."""
-    creds = authenticate_gmail()  # Get valid credentials
-
+    creds = authenticate_gmail()
     try:
         service = build("gmail", "v1", credentials=creds)
         message = MIMEText(body)
         message["to"] = recipient
         message["subject"] = subject
         raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-
         service.users().messages().send(
             userId="me",
             body={"raw": raw_message}
         ).execute()
-        return HttpResponse("✅ Email sent successfully!")
+        return JsonResponse({"message":"Email sent successfully!"})
     except Exception as e:
-        return HttpResponse(f"❌ Error sending email: {e}")
+        return JsonResponse({"error": f"Error sending email: {e}"})
 
-
-def verify_email(request, uidb64, token):
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-
-    if user and default_token_generator.check_token(user, token):
-        user.is_email_verified = True
-        user.save()
-        return HttpResponse("Email verified successfully! You can now log in.")
-    else:
-        return HttpResponse("Invalid or expired link.")
-
-
-def send_verification_email(request, user_id):
+import random
+def generate_otp(request, user_id):
     try:
         user = User.objects.get(pk=user_id)
-        if user.is_email_verified:
-            return HttpResponse("Your email is already verified.")
-
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        verification_url = request.build_absolute_uri(f"/verify/{uid}/{token}/")
+        otp = f"{random.randint(100000, 999999)}"
+        subject = "Verify Login With OTP"
+        message = f"Your verification code is: {otp}"
 
-        subject = "Verify Your Email"
-        message = f"Click the link to verify your email: {verification_url}"
-
+        otp_creation_key = f'otp_creation_{uid}_{token}'
+        request.session[otp_creation_key] = timezone.now().isoformat()
+        request.session[f'otp_{uid}_{token}'] = otp
+        request.session.set_expiry(60)
         send_email(user.email, subject, message)
 
-        return HttpResponse("✅ Verification email sent! Check your inbox.")
+        request.session["otp_user_id"] = user.id
+        request.session["otp_uid"] = uid
+        request.session["otp_token"] = token
 
+        return JsonResponse({"message": "OTP sent!", "uid": uid, "token": token})
     except User.DoesNotExist:
-        return HttpResponse("❌ User not found.", status=400)
+        return JsonResponse({"error": "User not found."}, status=400)
+
+
+def verify_otp(request):
+    if request.method == "POST":
+        try:
+            data = data = request.POST
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid or empty JSON."}, status=400)
+
+        uidb64 = data.get("uid")
+        token = data.get("token")
+        otp_raw = data.get("otp", "")
+        input_otp = otp_raw[:6]
+        input_voter_id = otp_raw[6:]
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+
+            if not default_token_generator.check_token(user, token):
+                return JsonResponse({"error": "Invalid or expired token."}, status=400)
+
+            session_key = f'otp_{uidb64}_{token}'
+            stored_otp = request.session.get(session_key)
+
+            if not stored_otp:
+                return JsonResponse({"error": "OTP expired or not found."}, status=400)
+
+            otp_creation_key = f'otp_creation_{uidb64}_{token}'
+            otp_creation_str = request.session.get(otp_creation_key)
+            if otp_creation_str:
+                otp_creation_time = parse_datetime(otp_creation_str)
+                otp_expiry_time = otp_creation_time + timedelta(seconds=180)
+                if timezone.now() > otp_expiry_time:
+                    return JsonResponse({"error": "OTP has expired."}, status=400)
+            if input_otp == stored_otp:
+                if user.voter_id == input_voter_id:
+                    login(request, user)
+                    del request.session[session_key]
+                    return redirect('dashboard')
+            else:
+                return JsonResponse({"error": "Incorrect OTP."}, status=400)
+        except (User.DoesNotExist, ValueError, TypeError):
+            return JsonResponse({"error": "Invalid user."}, status=400)
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+
+@require_GET
+def resend_otp(request):
+    user_id = request.session.get('otp_user_id')
+    uid = request.session.get('otp_uid')
+    token = request.session.get('otp_token')
+
+    if not user_id or not uid or not token:
+        return JsonResponse({"error": "Session expired or invalid. Please login again."}, status=400)
+    try:
+        session_key = f'otp_{uid}_{token}'
+        if session_key in request.session:
+            del request.session[session_key]
+        generate_otp(request, user_id)
+        return JsonResponse({"message": "OTP resent successfully!"})
+    except Exception as e:
+        return JsonResponse({"error": f"Failed to resend OTP. {str(e)}"}, status=400)
