@@ -1,70 +1,96 @@
 $(function () {
-    $("#table").bootstrapTable();
+	$("#table").bootstrapTable();
 });
 
 function togglePassword() {
-    const passwordInput = document.getElementById("password");
-    const toggleIcon = document.querySelector(".toggle-password");
+	const passwordInput = document.getElementById("password");
+	const toggleIcon = document.querySelector(".toggle-password");
 
-    if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        toggleIcon.textContent = "Hide";
-    } else {
-        passwordInput.type = "password";
-        toggleIcon.textContent = "show";
-    }
+	if (passwordInput.type === "password") {
+		passwordInput.type = "text";
+		toggleIcon.textContent = "Hide";
+	} else {
+		passwordInput.type = "password";
+		toggleIcon.textContent = "show";
+	}
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    const modalEl = document.getElementById("otpModal");
-    if (modalEl) {
-        var otpModal = new bootstrap.Modal(modalEl, {
-            keyboard: false,
-        });
-        otpModal.show();
-    } else {
-        console.warn("OTP modal not found in the DOM.");
-    }
+	const modalEl = document.getElementById("otpModal");
+	if (modalEl) {
+		var otpModal = new bootstrap.Modal(modalEl, {
+			keyboard: false,
+		});
+		otpModal.show();
+	} else {
+		console.warn("OTP modal not found in the DOM.");
+	}
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    const resendBtn = document.getElementById("resendBtn");
-    if (resendBtn) {
-        resendBtn.addEventListener("click", function () {
-            const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
-            fetch("/resend-otp/", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrftoken,
-                },
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    const statusEl = document.getElementById("resendStatus");
-                    if (data.message) {
-                        statusEl.innerText = data.message;
-                        statusEl.classList.remove("text-danger");
-                        statusEl.classList.add("text-success");
-                    } else {
-                        statusEl.innerText = data.error || "Something went wrong.";
-                        statusEl.classList.remove("text-success");
-                        statusEl.classList.add("text-danger");
-                    }
-                })
-                .catch(() => {
-                    document.getElementById("resendStatus").innerText = "Network error.";
-                });
-        });
-    }
+	const resendBtn = document.getElementById("resendBtn");
+	if (resendBtn) {
+		resendBtn.addEventListener("click", function () {
+			const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+			fetch("/resend-otp/", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					"X-CSRFToken": csrftoken,
+				},
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					const statusEl = document.getElementById("resendStatus");
+					if (data.message) {
+						statusEl.innerText = data.message;
+						statusEl.classList.remove("text-danger");
+						statusEl.classList.add("text-success");
+					} else {
+						statusEl.innerText = data.error || "Something went wrong.";
+						statusEl.classList.remove("text-success");
+						statusEl.classList.add("text-danger");
+					}
+				})
+				.catch(() => {
+					document.getElementById("resendStatus").innerText = "Network error.";
+				});
+		});
+	}
 });
 
 document.querySelectorAll("tr[data-url]").forEach((row) => {
-    row.style.cursor = "pointer";
-    row.addEventListener("click", () => {
-        window.location.href = row.dataset.url;
-    });
+	row.style.cursor = "pointer";
+	row.addEventListener("click", () => {
+		window.location.href = row.dataset.url;
+	});
 });
+
+document.getElementById("resetForm").addEventListener("submit", function (e) {
+	e.preventDefault();
+	const email = document.getElementById("email").value.trim();
+
+	if (email) {
+		alert(`Password reset link sent to ${email}`);
+		// Here you could add an actual API call if needed
+	} else {
+		alert("Please enter a valid email address.");
+	}
+});
+
+
+function submitVote() {
+	const selectedOption = document.querySelector('input[name="pollOption"]:checked');
+	if (selectedOption) {
+		alert(`You voted for: ${selectedOption.value}`);
+	} else {
+		alert("Please select an option to vote.");
+	}
+}
+
+function showResults() {
+	alert("Displaying poll results... (this can be replaced with real results UI)");
+}
 
 // document.getElementById("otpForm").addEventListener("submit", function (event) {
 //     event.preventDefault();
