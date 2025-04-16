@@ -31,7 +31,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const resendBtn = document.getElementById("resendBtn");
     if (resendBtn) {
         resendBtn.addEventListener("click", function () {
-            fetch("{% url 'resend_otp' %}")
+            const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+            fetch("/resend-otp/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken,
+                },
+            })
                 .then((response) => response.json())
                 .then((data) => {
                     const statusEl = document.getElementById("resendStatus");
