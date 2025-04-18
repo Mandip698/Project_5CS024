@@ -1,26 +1,32 @@
 {% load static %}
 <div class="modal fade"
-     id="otpModal"
+     id="forgotOtpModal"
      tabindex="-1"
-     aria-labelledby="otpModalLabel"
+     aria-labelledby="forgotOtpModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="otpModalLabel">Verify OTP</h5>
+                <h5 class="modal-title" id="forgotOtpModalLabel">Verify OTP</h5>
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="otpForm" method="post" action="{% url 'verify_otp' %}">
+                <form id="forgotOtpForm"
+                      method="post"
+                      action="{% url 'reset_password_after_otp' %}">
                     {% csrf_token %}
                     <input type="hidden" name="uid" value="" />
                     <input type="hidden" name="token" value="" />
                     <div class="mb-3">
-                        <label for="otp" class="form-label">Enter OTP</label>
-                        <input type="text" name="otp" id="otp" class="form-control" required />
+                        <label for="forgotOtp" class="form-label">Enter OTP</label>
+                        <input type="text"
+                               name="forgotOtp"
+                               id="forgotOtp"
+                               class="form-control"
+                               required />
                     </div>
                     <div class="d-flex justify-content-between mt-3">
                         <button type="submit" class="btn btn-primary">Verify</button>
@@ -31,4 +37,4 @@
         </div>
     </div>
 </div>
-<script src="{% static 'js/custom/otp.js' %}"></script>
+<script src="{% static 'js/custom/forgot_otp.js' %}"></script>

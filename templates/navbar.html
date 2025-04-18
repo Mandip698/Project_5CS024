@@ -2,37 +2,44 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-dark shadow-sm">
     <div class="container d-flex justify-content-between align-items-center">
         <!-- Logo on the Left -->
-        <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
-            <img src="{% static 'images/Logo1.png' %}" alt="Logo" width="50" height="50" class="me-2" />
+        <a class="navbar-brand d-flex align-items-center"
+           href="{% url 'index' %}">
+            <img src="{% static 'images/Logo1.png' %}"
+                 alt="Logo"
+                 width="50"
+                 height="50"
+                 class="me-2" />
         </a>
-
         <!-- Title in the Center -->
         <div class="mx-auto text-center">
             <a href="{% url 'index' %}" class="text-decoration-none">
                 <span class="navbar-title text-white fw-bold"> Vote<span class="text-danger">हालः</span> </span>
             </a>
         </div>
-
         <!-- Right Side Content (Login or Profile) -->
         <div class="d-flex align-items-center">
             {% if user.is_authenticated %}
-            <div class="dropdown">
-                <img
-                    src="{% static 'images/avatar.svg' %}"
-                    alt="Avatar"
-                    class="avatar dropdown-toggle"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                />
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">Log Out</a></li>
-                </ul>
-            </div>
-            <h4>{{ user.username }}</h4>
+                <div class="dropdown">
+                    <img src="{% static 'images/avatar.svg' %}"
+                         alt="Avatar"
+                         class="avatar dropdown-toggle"
+                         role="button"
+                         data-bs-toggle="dropdown"
+                         aria-expanded="false"
+                         height="50"
+                         width="50" />
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="#">Profile</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+                        </li>
+                    </ul>
+                </div>
+                <h4>{{ user.username }}</h4>
             {% else %}
-            <a class="btn btn-success btn-lg" href="{% url 'login_view' %}">Login</a>
+                <a class="btn btn-success btn-lg" href="{% url 'login_view' %}">Login</a>
             {% endif %}
         </div>
     </div>

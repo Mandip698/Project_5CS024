@@ -1,68 +1,43 @@
-{% extends 'main.html' %} {% block content %} {% load static %}
-
-<div class="center-container">
-    <form method="post" action="{% url 'login_view' %}" class="login-form">
-        {% csrf_token %}
-
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input
-                type="email"
-                name="email"
-                id="email"
-                class="form-control"
-                placeholder="Enter your email"
-                required
-            />
-        </div>
-
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <div class="input-group">
-                <input type="password" name="password" id="password" class="form-control" required />
-                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">Show</button>
+{% extends "main.html" %}
+{% block content %}
+    {% load static %}
+    <div class="center-container">
+        <form id="loginForm" class="login-form">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email"
+                       name="email"
+                       id="email"
+                       class="form-control"
+                       placeholder="Enter your email"
+                       required />
             </div>
-        </div>
-
-        <div class="mb-3 text-end">
-            <a href="#" class="text-decoration-none">Forgot your Password?</a>
-        </div>
-
-        <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Log in</button>
-        </div>
-    </form>
-</div>
-
-{% if show_otp_modal %}
-<!-- OTP Modal -->
-<div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="otpModalLabel">Verify OTP</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <input type="password"
+                           name="password"
+                           id="password"
+                           class="form-control"
+                           required />
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            onclick="togglePassword()">Show</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <form method="post" action="{% url 'verify_otp' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="uid" value="{{ uid }}" />
-                    <input type="hidden" name="token" value="{{ token }}" />
-                    <div class="mb-3">
-                        <label for="otp" class="form-label">Enter OTP</label>
-                        <input type="text" name="otp" id="otp" class="form-control" required />
-                    </div>
-                    {% if error %}
-                    <p class="text-danger">{{ error }}</p>
-                    {% endif %}
-                    <div class="d-flex justify-content-between mt-3">
-                        <button type="submit" class="btn btn-primary">Verify</button>
-                        <button type="button" id="resendBtn" class="btn btn-link">Resend OTP</button>
-                    </div>
-                    <div id="resendStatus" class="mt-2 text-muted small"></div>
-                </form>
+            <div class="mb-3 text-end">
+                <a href="#"
+                   class="text-decoration-none"
+                   data-bs-toggle="modal"
+                   data-bs-target="#forgotModal">Forgot your Password?</a>
             </div>
-        </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Log in</button>
+            </div>
+        </form>
     </div>
-</div>
-{% endif %} {% endblock %}
+    {% include "vote/otp.html" %}
+    {% include "vote/forgot_password.html" %}
+    <script src="{% static 'js/custom/login.js' %}"></script>
+{% endblock content %}
