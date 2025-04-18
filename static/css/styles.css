@@ -7,3 +7,224 @@ html {
     background-attachment: fixed;
     background-size: cover; */
 }
+
+/* jeshmin style */
+/* =============== Global Reset =============== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* =============== Global Buttons & Links =============== */
+  .button,
+  button {
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    padding: 10px 16px;
+    margin: 4px;
+    color: #fff;
+    background-color: #3b82f6; /* Blue */
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .button:hover,
+  button:hover {
+    background-color: #2563eb; /* Darker Blue */
+  }
+  
+  /* Simple container for navigation links, center them if needed */
+  .nav-links {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .center-nav {
+    margin-bottom: 20px;
+  }
+  
+  /* =============== Index (Home) Styles =============== */
+  .container-home {
+    width: 100%;
+    max-width: 600px;
+    margin: 80px auto;
+    text-align: center;
+    color: #333;
+    font-family: Arial, sans-serif;
+  }
+  .container-home h1 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+  }
+  
+  /* =============== Profile Page Styles =============== */
+  /* Light background for profile page */
+  body.light-bg {
+    background-color: #f4f6f8;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  .profile-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  .profile-container h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: #333;
+  }
+  .profile-card {
+    margin-bottom: 1.5rem;
+  }
+  .avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #ccc;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  .input-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  .input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+  }
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  /* =============== Results Page Styles =============== */
+  /* Dark background for results page */
+  body.dark-bg {
+    background-color: #111827; /* Dark gray */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e5e7eb; /* Light text color */
+  }
+  .result-container {
+    max-width: 700px;
+    margin: 40px auto;
+    background-color: #1f2937; /* Dark card background */
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+  /* Header */
+  .result-header {
+    text-align: left;
+    border-bottom: 1px solid #374151;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  .result-header h2 {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+  .posted-info {
+    font-size: 0.9rem;
+    color: #9ca3af;
+  }
+  /* Body Layout */
+  .result-body {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .options {
+    flex: 1;
+  }
+  .results-flex {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  
+  .results-left {
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  .results-right {
+    flex: 0 0 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .pie-chart {
+    flex: 1;
+    background-color: #374151;
+    border-radius: 8px;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #9ca3af;
+    padding: 1rem;
+  }
+  /* Option + Progress Bars */
+  .option {
+    margin-bottom: 1rem;
+  }
+  .option-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+  }
+  .option-name {
+    font-weight: 500;
+    color: #fff;
+  }
+  .option-percentage {
+    font-size: 0.9rem;
+    color: #9ca3af;
+  }
+  .progress-bar {
+    background-color: #374151;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress {
+    height: 100%;
+    background-color: #3b82f6;
+    width: 0;
+    transition: width 0.4s ease;
+  }
+  .total-votes {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #9ca3af;
+  }
+  /* Footer Buttons */
+  .result-footer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .result-footer button {
+    background-color: #4b5563; /* Gray button background */
+  }
+  .result-footer button:hover {
+    background-color: #6b7280;
+    
+  }
