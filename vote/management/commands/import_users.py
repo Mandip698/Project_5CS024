@@ -3,29 +3,25 @@ import string
 import secrets
 import requests
 from vote.models import User
-from vote.views import send_email
+from django.conf import settings
+from django.core.mail import send_mail
 from email.utils import parsedate_to_datetime
 from django.contrib.auth.hashers import make_password
 from django.core.management.base import BaseCommand, CommandError
 
 
-
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        api_url = "http://localhost:5000/api/users"
-        default_password = "VoteHala123"
+        api_url = "settings.USER_API_LINK"
         required_fields = [
             "username", "first_name", "last_name",
             "is_superuser", "is_staff", "is_active", "email",
             "voter_id", "date_joined"
         ]
-
         try:
             response = requests.get(api_url)
             response.raise_for_status()
             users = response.json()
-
-            # First pass: Validation only
             for user_data in users:
                 for field in required_fields:
                     value = user_data.get(field)
@@ -36,15 +32,12 @@ class Command(BaseCommand):
                         (isinstance(value, float) and math.isnan(value))
                     ):
                         raise ValueError(f"Error: Field '{field}' is missing or invalid for user: {user_data}")
-                # Validate date parsing
                 try:
                     parsedate_to_datetime(user_data["date_joined"])
                 except Exception as e:
                     raise ValueError(f"Failed to parse date for user '{user_data.get('username', '')}': {e}")
 
-            # Second pass: All valid, proceed with saving
-            new_users = []  # Track newly created users
-
+            new_users = [] 
             for user_data in users:
                 user = (
                     User.objects.filter(username=user_data["username"]).first()
@@ -65,15 +58,12 @@ class Command(BaseCommand):
                 user.email = user_data["email"]
                 user.voter_id = user_data["voter_id"]
                 user.date_joined = parsedate_to_datetime(user_data["date_joined"])
-
                 if is_new:
                     generated_password = self.generate_random_password()
                     user.password = make_password(generated_password)
-                    new_users.append((user, generated_password))  # Save for email
-
+                    new_users.append((user, generated_password))
                 user.save()
 
-                # After all are saved, send emails to newly inserted users
                 for user, generated_password in new_users:
                     subject = "Welcome to Voteहालः!"
                     body = (
@@ -87,9 +77,8 @@ class Command(BaseCommand):
                         f"If you have any questions, feel free to reach out.\n\n"
                         "Best regards,\nVoteहालः Team"
                     )
-                    send_email(user.email, subject, body)
+                    send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [user.email])
             self.stdout.write(self.style.SUCCESS("All users imported and sent mail successfully successfully."))
-
         except Exception as e:
             raise CommandError(str(e))
 
