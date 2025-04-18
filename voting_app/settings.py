@@ -12,12 +12,12 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 # from http.client import BAD_GATEWAY
 from pathlib import Path
-# import os
+import os
 
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 # # Load environment variables from .env file
-# load_dotenv()
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-0=hjji5pm^*@(vzr*hpi+_c07@jj+_(*2@h5-gg_6=#1xujg^l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app']
 
 
 # Application definition
@@ -199,6 +199,16 @@ MEDIA_URL = '/images/'
 
 STATICFILES_DIRS = [ BASE_DIR / 'static' ]
 
+LOGIN_URL = '/login_view/'
+
+# Session expires after 30 minutes of inactivity
+SESSION_COOKIE_AGE = 300  # seconds (30 mins)
+
+# If True, session expires when the browser is closed
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+SESSION_SAVE_EVERY_REQUEST = True
+
 MEDIA_ROOT = BASE_DIR / 'static/images'
 
 # Default primary key field type
@@ -206,4 +216,13 @@ MEDIA_ROOT = BASE_DIR / 'static/images'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

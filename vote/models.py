@@ -12,6 +12,7 @@ class User(AbstractUser):
     middle_name = models.CharField(max_length=100, null=True, blank=True)
     voter_id = models.CharField(max_length=100, unique=True, null=True, blank=True) 
     voter_id_image = models.ImageField(null=True, blank=True)
+    change_password = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username','first_name','last_name', 'voter_id']
