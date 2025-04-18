@@ -28,8 +28,7 @@ class UserAdmin(admin.ModelAdmin):
                 ["python", "manage.py", "import_users"],
                 capture_output=True,
                 text=True,
-            )
-    
+            )    
             stdout_msg = result.stdout.strip()
             stderr_msg = result.stderr.strip()
     
