@@ -2,8 +2,6 @@ env
 db.sqlite3
 .vscode
 .env
-credentials.json
-token.pickle
 vote/migrations/*
 vote/__pycache__
 voting_app/__pycache__/*
