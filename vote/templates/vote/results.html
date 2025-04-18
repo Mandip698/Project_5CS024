@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voting Results</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .results-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .result-item {
+      margin-bottom: 20px;
+    }
+
+    .label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .progress-bar-container {
+      background-color: #ddd;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 25px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #4caf50;
+      text-align: center;
+      color: white;
+      line-height: 25px;
+      white-space: nowrap;
+      transition: width 0.3s ease;
+    }
+
+    #total-votes {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .button {
+      padding: 10px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+    .chart-container {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="results-container">
+    <h2>Live Voting Results</h2>
+  
+    <div class="results-flex">
+      <!-- LEFT: Questions & Progress -->
+      <div class="results-left">
+        <div class="result-item">
+          <div class="label">Option 1: Test</div>
+          <div class="progress-bar-container">
+            <div id="progress-1" class="progress-bar">0%</div>
+          </div>
+          <div id="percentage-1"></div>
+        </div>
+  
+        <div class="result-item">
+          <div class="label">Option 2: Test1</div>
+          <div class="progress-bar-container">
+            <div id="progress-2" class="progress-bar">0%</div>
+          </div>
+          <div id="percentage-2"></div>
+        </div>
+  
+        <div id="total-votes">Total votes: 0</div>
+      </div>
+  
+      <!-- RIGHT: Pie Chart -->
+      <div class="results-right">
+        <canvas id="votesPieChart" width="200" height="200"></canvas>
+      </div>
+    </div>
+  
+    <div class="buttons">
+      <button class="button" id="liveResultsBtn">Live Results</button>
+      <button class="button" id="backToPollBtn">Back to Poll</button>
+      <button class="button" id="shareBtn">Share</button>
+    </div>
+  </div>
+  
+
+  <script src="results.js"></script>
+</body>
+</html>

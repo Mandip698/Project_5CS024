@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="light-bg">
+  <div class="profile-container">
+    <h2>User Profile</h2>
+    
+    <div class="profile-card">
+      <img id="avatar" src="https://via.placeholder.com/150" alt="User Avatar" class="avatar"/>
+      <h3 id="profileName">John Doe</h3>
+      <p id="profileEmail">johndoe@example.com</p>
+
+      <div class="input-group">
+        <label for="nameInput">Name</label>
+        <input type="text" id="nameInput" placeholder="Enter name"/>
+      </div>
+      
+      <div class="input-group">
+        <label for="emailInput">Email</label>
+        <input type="email" id="emailInput" placeholder="Enter email"/>
+      </div>
+
+      <button id="saveProfileBtn">Save Profile</button>
+    </div>
+
+    <div class="nav-links">
+      <a href="index.html" class="button">Back to Home</a>
+      <a href="results.html" class="button">Go to Results</a>
+    </div>
+  </div>
+
+  <script src="profile.js"></script>
+</body>
+</html>
