@@ -20,17 +20,21 @@
         <div class="d-flex align-items-center">
             {% if user.is_authenticated %}
                 <div class="dropdown">
-                    <img src="{% static 'images/avatar.svg' %}"
-                         alt="Avatar"
-                         class="avatar dropdown-toggle"
-                         role="button"
-                         data-bs-toggle="dropdown"
-                         aria-expanded="false"
-                         height="50"
-                         width="50" />
+                    <img src="{{ user.avatar.url }}"
+                        alt="Avatar"
+                        class="avatar dropdown-toggle"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        height="50"
+                        width="50"
+                        onerror="this.onerror=null; this.src='{% static 'images/avatar.svg' %}';"
+                    />
+
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <a class="dropdown-item" href="#">Profile</a>
+                            <a class="dropdown-item" href="{% url 'profile-view' %}">Profile</a>
+
                         </li>
                         <li>
                             <a class="dropdown-item" href="#">Admin Panel</a>

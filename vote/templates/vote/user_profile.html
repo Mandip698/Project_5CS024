@@ -1,98 +1,40 @@
 {% extends "main.html" %}
 {% block content %}
     {% load static %}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-8">
-                <h1 class="mb-4">Edit Profile</h1>
-                <div class="row">
-                    <!-- Profile Picture Column -->
-                    <div class="col-md-4 text-center">
-                        <div class="profile-picture-container mb-3">
-                            <img src="https://via.placeholder.com/150"
-                                 alt="Profile Picture"
-                                 class="profile-picture">
-                        </div>
-                        <button class="btn btn-outline-primary change-photo-btn"
-                                onclick="document.getElementById('profile-picture-upload').click()">
-                            Change Photo
-                        </button>
-                        <input type="file"
-                               id="profile-picture-upload"
-                               accept="image/*"
-                               style="display: none">
-                    </div>
-                    <!-- Profile Info Column -->
-                    <div class="col-md-8">
-                        <!-- Tab Navigation -->
-                        <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active"
-                                        id="profile-tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#profile"
-                                        type="button"
-                                        role="tab">Profile</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link"
-                                        id="password-tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#password"
-                                        type="button"
-                                        role="tab">Password</button>
-                            </li>
-                        </ul>
-                        <!-- Tab Content -->
-                        <div class="tab-content" id="profileTabsContent">
-                            <!-- Profile Tab -->
-                            <div class="tab-pane fade show active" id="profile" role="tabpanel">
-                                <div class="profile-section">
-                                    <h5 class="profile-title">Name</h5>
-                                    <div class="profile-item">
-                                        <label class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" value="John Doe">
-                                    </div>
-                                    <div class="profile-item">
-                                        <label class="form-label">Email</label>
-                                        <input type="email" class="form-control" value="john.doe@example.com">
-                                    </div>
-                                </div>
-                                <div class="section-divider"></div>
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-primary" type="button">Save Changes</button>
-                                </div>
-                            </div>
-                            <!-- Password Tab -->
-                            <div class="tab-pane fade" id="password" role="tabpanel">
-                                <div class="profile-section">
-                                    <h5 class="profile-title">Change Password</h5>
-                                    <div class="profile-item">
-                                        <label class="form-label">Current Password</label>
-                                        <input type="password"
-                                               class="form-control"
-                                               placeholder="Enter current password">
-                                    </div>
-                                    <div class="profile-item">
-                                        <label class="form-label">New Password</label>
-                                        <input type="password" class="form-control" placeholder="Enter new password">
-                                    </div>
-                                    <div class="profile-item">
-                                        <label class="form-label">Confirm New Password</label>
-                                        <input type="password"
-                                               class="form-control"
-                                               placeholder="Confirm new password">
-                                    </div>
-                                </div>
-                                <div class="section-divider"></div>
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-primary" type="button">Update Password</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <h1 class="mb-4">My Profile</h1>
+
+            <div class="row">
+                <!-- Avatar -->
+                <div class="col-md-4 text-center mb-4">
+                    <img src="{{ user.avatar.url }}" alt="Avatar" width="150" class="rounded-circle mb-2" onerror="this.onerror=null;this.src='{% static 'images/avatar.svg' %}'">
+                    <p class="text-muted">Profile Picture</p>
+                </div>
+
+                <!-- Voter ID -->
+                <div class="col-md-4 text-center mb-4">
+                    {% if user.voter_id_image %}
+                        <img src="{{ user.voter_id_image.url }}" alt="Voter ID" width="150" class="rounded mb-2">
+                    {% else %}
+                        <img src="https://via.placeholder.com/150" alt="Voter ID" width="150" class="rounded mb-2">
+                    {% endif %}
+                    <p class="text-muted">Voter ID Image</p>
                 </div>
             </div>
+
+            <ul class="list-group mb-4">
+                <li class="list-group-item"><strong>Username:</strong> {{ user.username }}</li>
+                <li class="list-group-item"><strong>First Name:</strong> {{ user.first_name }}</li>
+                <li class="list-group-item"><strong>Middle Name:</strong> {{ user.middle_name }}</li>
+                <li class="list-group-item"><strong>Last Name:</strong> {{ user.last_name }}</li>
+                <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+            </ul>
+
+            <a href="{% url 'edit-profile' %}" class="btn btn-primary">Edit Profile</a>
+            <button class="btn btn-secondary" onclick="window.location.href='{% url 'dashboard' %}'">Back</button>
         </div>
     </div>
-{% endblock content %}
+</div>
+{% endblock %}
