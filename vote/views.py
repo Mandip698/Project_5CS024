@@ -51,10 +51,21 @@ def edit_profile(request):
     user = request.user
 
     if request.method == 'POST':
+        # Get the new username
+        new_username = request.POST.get('username')
+
+        # Check if the new username already exists in other users
+        if User.objects.filter(username=new_username).exclude(id=user.id).exists():
+            messages.error(request, "This username is already taken by another user.")
+            return redirect('edit-profile')
+
+        # Update the user's profile if the username is unique
+        user.username = new_username
         user.first_name = request.POST.get('first_name')
         user.middle_name = request.POST.get('middle_name')
         user.last_name = request.POST.get('last_name')
 
+        # Update the avatar and voter ID image 
         if request.FILES.get('avatar'):
             user.avatar = request.FILES['avatar']
         if request.FILES.get('voter_id_image'):
