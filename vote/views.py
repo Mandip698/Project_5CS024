@@ -46,6 +46,11 @@ def contact(request):
 
 def about(request):
     return render(request, 'vote/about.html')
+
+@login_required
+def profile_view(request):
+    return render(request, 'vote/user_profile.html')
+
 @login_required
 def edit_profile(request):
     user = request.user
@@ -73,9 +78,9 @@ def edit_profile(request):
 
         user.save()
         messages.success(request, "Profile updated successfully.")
-        return redirect('edit-profile')
+        return redirect('profile-view')
 
-    return render(request, 'user_profile_edit.html')
+    return render(request, 'vote/user_profile_edit.html')
     
 def login_view(request):
     if 'next' in request.GET:

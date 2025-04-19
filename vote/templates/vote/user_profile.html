@@ -1,0 +1,40 @@
+{% extends "main.html" %}
+{% block content %}
+    {% load static %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <h1 class="mb-4">My Profile</h1>
+
+            <div class="row">
+                <!-- Avatar -->
+                <div class="col-md-4 text-center mb-4">
+                    <img src="{{ user.avatar.url }}" alt="Avatar" width="150" class="rounded-circle mb-2" onerror="this.onerror=null;this.src='{% static 'images/avatar.svg' %}'">
+                    <p class="text-muted">Profile Picture</p>
+                </div>
+
+                <!-- Voter ID -->
+                <div class="col-md-4 text-center mb-4">
+                    {% if user.voter_id_image %}
+                        <img src="{{ user.voter_id_image.url }}" alt="Voter ID" width="150" class="rounded mb-2">
+                    {% else %}
+                        <img src="https://via.placeholder.com/150" alt="Voter ID" width="150" class="rounded mb-2">
+                    {% endif %}
+                    <p class="text-muted">Voter ID Image</p>
+                </div>
+            </div>
+
+            <ul class="list-group mb-4">
+                <li class="list-group-item"><strong>Username:</strong> {{ user.username }}</li>
+                <li class="list-group-item"><strong>First Name:</strong> {{ user.first_name }}</li>
+                <li class="list-group-item"><strong>Middle Name:</strong> {{ user.middle_name }}</li>
+                <li class="list-group-item"><strong>Last Name:</strong> {{ user.last_name }}</li>
+                <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+            </ul>
+
+            <a href="{% url 'edit-profile' %}" class="btn btn-primary">Edit Profile</a>
+            <button class="btn btn-secondary" onclick="window.location.href='{% url 'dashboard' %}'">Back</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
