@@ -1,9 +1,57 @@
-{% extends "main.html" %} {% block content %}
-<h2>{{ poll.title }}</h2>
-<p>{{ poll.description }}</p>
-
-<form method="post">
-    {% csrf_token %} {{ form.as_p }}
-    <button type="submit">Vote</button>
-</form>
-{% endblock %}
+{% extends "main.html" %}
+{% block content %}
+    {% load static %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="vote-container">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">{{ poll.topic }}</h1>
+                <p class="card-description" id="card-description">{{ poll.description }}</p>
+                <div class="text-muted-light">{{ poll.start_date|timesince }} ago</div>
+            </div>
+            <div class="content-grid">
+                <div class="options-container">
+                    <!-- Voting form -->
+                    <div id="voting-form">
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            {% for option in options %}
+                                <div class="option">
+                                    <input type="radio"
+                                           id="option{{ forloop.counter }}"
+                                           name="poll-option"
+                                           value="{{ option.id }}"
+                                           class="radio-input"
+                                           {% if user_voted_option_id == option.id %}checked{% endif %}
+                                           {% if user_voted_option_id or poll.status != "live" %}disabled{% endif %}>
+                                    <label for="option{{ forloop.counter }}" class="option-label">{{ option.option_text }}</label>
+                                </div>
+                            {% endfor %}
+                            <button id="vote-button"
+                                    class="vote-button"
+                                    {% if user_voted_option_id or poll.status != "live" %}disabled{% endif %}>
+                                Cast Vote
+                            </button>
+                        </form>
+                    </div>
+                    <!-- Text-based results -->
+                    <div id="results-container" class="results-container"></div>
+                    {% if poll.status == "live" %}
+                        <p class="text-muted-light text-success text-center">Poll ends {{ poll.end_date|timeuntil }} from now</p>
+                    {% elif poll.status == "closed" %}
+                        <p class="text-muted-light text-danger text-center">Poll has already ended.</p>
+                    {% elif poll.status == "pending" %}
+                        <p class="text-muted-light text-warning text-center">Poll has not started yet.</p>
+                    {% endif %}
+                </div>
+                <!-- Chart section -->
+                <div class="chart-container">
+                    <div class="total-votes" id="total-votes"></div>
+                    <canvas id="results-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>const pollData = JSON.parse('{{ poll_data_json|escapejs }}');</script>
+    <script src="{% static 'js/custom/vote_poll.js' %}"></script>
+{% endblock content %}

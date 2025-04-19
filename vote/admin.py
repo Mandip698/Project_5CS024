@@ -28,8 +28,7 @@ class UserAdmin(admin.ModelAdmin):
                 ["python", "manage.py", "import_users"],
                 capture_output=True,
                 text=True,
-            )
-    
+            )    
             stdout_msg = result.stdout.strip()
             stderr_msg = result.stderr.strip()
     
@@ -68,12 +67,34 @@ class PollAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         })
     )
+    
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.status == 'live':
+            # Make all fields readonly if status is 'live'
+            all_fields = [field.name for field in self.model._meta.fields]
+            return all_fields
+        return super().get_readonly_fields(request, obj)
+
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        obj = self.get_object(request, object_id)
+        if obj and obj.status == 'live':
+            extra_context = extra_context or {}
+            extra_context['show_save'] = False
+            extra_context['show_save_and_continue'] = False
+            extra_context['show_save_and_add_another'] = False
+            messages.warning(request, "This poll is live and cannot be edited.")
+        return super().changeform_view(request, object_id, form_url, extra_context)
+
     def save_model(self, request, obj, form, change):
         if not change:
             obj.created_by = request.user
         obj.updated_by = request.user
         super().save_model(request, obj, form, change)
-        
+    # def has_delete_permission(self, request, obj=None):
+    #     if obj and obj.status == 'live':
+    #         return False
+    #     return super().has_delete_permission(request, obj)
+
         
 # Registering the models
 admin.site.register(User, UserAdmin)
