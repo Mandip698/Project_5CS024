@@ -1,0 +1,101 @@
+{% extends "main.html" %}
+{% block content %}
+    {% load static %}
+    <div class="container main-container">
+        <div class="row contact-sections">
+            <!-- Contact Info (Left Side) -->
+            <div class="col-lg-6 contact-card strawpoll-contact">
+                <h1 class="contact-header">Contact Us</h1>
+                <p class="contact-intro">The best way to contact us is by sending an email to one of the addresses below:</p>
+                <div class="contact-section">
+                    <h2 class="info-title">Support</h2>
+                    <p class="info-description">
+                        If you need support or have any questions or suggestions about the product, please contact our support team.
+                    </p>
+                    <p class="info-detail">
+                        E-Mail: <strong>support@votehala.com</strong>
+                    </p>
+                </div>
+                <div class="contact-section">
+                    <h2 class="info-title">Sales</h2>
+                    <p class="info-description">
+                        If you're interested in custom offers or bulk licences for your organization, please reach out to our sales team.
+                    </p>
+                    <p class="info-detail">
+                        E-Mail: <strong>sales@votehala.com</strong>
+                    </p>
+                </div>
+                <div class="contact-section">
+                    <h2 class="info-title">General Inquiries</h2>
+                    <p class="info-description">
+                        For all other questions or suggestions, please feel free to contact our general e-mail channel.
+                    </p>
+                    <p class="info-detail">
+                        E-Mail: <strong>contact@votehala.com</strong>
+                    </p>
+                </div>
+            </div>
+            <!-- Contact Form (Right Side) -->
+            <div class="col-lg-6 contact-card voting-contact">
+                <h1 class="contact-header">Contact Voteहाल:</h1>
+                <p class="contact-intro">
+                    Have questions about our online voting platform? We're here to help ensure your voice is heard.
+                </p>
+                <hr class="divider my-4">
+                <div class="form-section">
+                    <form method="post" action="{% url 'contact' %}">
+                        {% csrf_token %}
+                        <h2 class="form-label">Your Name</h2>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Enter your name">
+                        </div>
+                        <h2 class="form-label">Email Address</h2>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="Enter your email">
+                        </div>
+                        <h2 class="form-label">Message</h2>
+                        <div class="mb-3">
+                            <textarea class="form-control message-box"
+                                      rows="5"
+                                      placeholder="How can we help you?"></textarea>
+                        </div>
+                        <button class="btn btn-primary send-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="find-us my-5">
+        <h2 class="text-center mb-4">Find Us At</h2>
+        <div class="social-links d-flex justify-content-center flex-wrap">
+            <!-- Discord logo only -->
+            <a href="https://discord.gg/yourlink"
+               class="social-logo discord"
+               target="_blank"
+               title="Join us on Discord">
+                <i class="fab fa-discord"></i>
+            </a>
+            <!-- Instagram logo only -->
+            <a href="https://instagram.com/yourprofile"
+               class="social-logo instagram"
+               target="_blank"
+               title="Follow us on Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <!-- LinkedIn logo only -->
+            <a href="https://linkedin.com/yourpage"
+               class="social-logo linkedin"
+               target="_blank"
+               title="Connect on LinkedIn">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <!-- Facebook logo only -->
+            <a href="https://facebook.com/yourpage"
+               class="social-logo facebook"
+               target="_blank"
+               title="Like us on Facebook">
+                <i class="fab fa-facebook"></i>
+            </a>
+        </div>
+    </section>
+{% endblock content %}

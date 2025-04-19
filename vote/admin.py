@@ -1,9 +1,10 @@
+import sys
+import subprocess
 from django.urls import path
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib import admin
 from .models import User, Poll, Option, UserVote
-import subprocess
 
 
 admin.site.site_header = "Voteहालः"
@@ -25,13 +26,12 @@ class UserAdmin(admin.ModelAdmin):
     def import_users(self, request):
         try:
             result = subprocess.run(
-                ["python", "manage.py", "import_users"],
+                [sys.executable, "manage.py", "import_users"],
                 capture_output=True,
                 text=True,
             )    
             stdout_msg = result.stdout.strip()
             stderr_msg = result.stderr.strip()
-    
             if result.returncode == 0:
                 messages.success(request, stdout_msg or "Users imported successfully.")
             else:
