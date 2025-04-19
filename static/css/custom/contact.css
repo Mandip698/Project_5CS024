@@ -108,8 +108,7 @@
 }
 
 .social-links {
-    gap: 20px;
-    /* Space between logos */
+    gap: 80px;
 }
 
 .social-logo {

@@ -13,8 +13,7 @@ from django.utils.dateparse import parse_datetime
 from vote.models import User, UserVote, Poll, Option
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.http import require_POST
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth import authenticate, login, logout
@@ -41,20 +40,34 @@ def dashboard(request):
 
 
 def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        subject = f'New Contact Form Submission from {name}'
+        full_message = f"From: {name} <{email}>\n\nMessage:\n{message}"
+        try:
+            send_mail(
+                subject,
+                full_message,
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.DEFAULT_FROM_EMAIL],
+                fail_silently=False,
+            )
+            messages.success(request, "Your message has been sent successfully.")
+        except Exception as e:
+            messages.error(request, f"An error occurred: {e}")
+            print(e)
     return render(request, 'vote/contact.html')
 
 
 def about(request):
     return render(request, 'vote/about.html')
 
-@login_required
-def profile_view(request):
-    return render(request, 'vote/user_profile.html')
 
 @login_required
-def edit_profile(request):
+def user_profile(request):
     user = request.user
-
     if request.method == 'POST':
         # Get the new username
         new_username = request.POST.get('username')
@@ -62,7 +75,7 @@ def edit_profile(request):
         # Check if the new username already exists in other users
         if User.objects.filter(username=new_username).exclude(id=user.id).exists():
             messages.error(request, "This username is already taken by another user.")
-            return redirect('edit-profile')
+            return redirect('user-profile')
 
         # Update the user's profile if the username is unique
         user.username = new_username
@@ -78,10 +91,10 @@ def edit_profile(request):
 
         user.save()
         messages.success(request, "Profile updated successfully.")
-        return redirect('profile-view')
+        return redirect('user-profile')
+    return render(request, 'vote/user_profile.html')
 
-    return render(request, 'vote/user_profile_edit.html')
-    
+
 def login_view(request):
     if 'next' in request.GET:
         messages.warning(request, 'User should be logged in to view this page.')
@@ -102,7 +115,6 @@ def login_view(request):
             token = request.session.get("otp_token")
             if not user_id or not uid or not token:
                 return JsonResponse({'success': False, 'error': "OTP generation failed. Please try again."})
-            messages.success(request, f'Welcome {user.first_name}! You have logged in successfully.')
             return JsonResponse({
                 'success': True,
                 'show_otp_modal': True,
@@ -172,6 +184,7 @@ def verify_otp(request):
         request.session.pop(session_key, None)
         request.session.pop(otp_creation_key, None)
         login(request, user)
+        messages.success(request, f'Welcome {user.first_name}! You have logged in successfully.')
         if user.change_password:
             return JsonResponse({'success': True, 'redirect_url': reverse('change_password')})
         return JsonResponse({'success': True, 'redirect_url': reverse('dashboard')})
@@ -195,7 +208,6 @@ def resend_otp(request):
         user_id = request.session.get("otp_user_id")
         uid = request.session.get("otp_uid")
         token = request.session.get("otp_token")
-        breakpoint()
         if not user_id or not uid or not token:
             messages.error(request, "OTP generation failed. Please try again.")
             return redirect('login_view')
@@ -207,19 +219,33 @@ def resend_otp(request):
 @login_required
 def change_password(request):
     if request.method == "POST":
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            user.change_password = False
-            user.save()
-            update_session_auth_hash(request, user)
-            messages.success(request, "Your password has been updated successfully!")
-            return redirect('login_view')
-        else:
-            messages.error(request, "Please correct the errors below.")
-    else:
-        form = PasswordChangeForm(request.user)
-    return render(request, "vote/change_password.html", {'form': form})
+        old_password = request.POST.get('old_password')
+        new_password1 = request.POST.get('new_password1')
+        new_password2 = request.POST.get('new_password2')
+
+        has_error = False
+        if not check_password(old_password, request.user.password):
+            messages.error(request, "Old password is incorrect.")
+            has_error = True
+
+        if new_password1 != new_password2:
+            messages.error(request, "New passwords do not match.")
+            has_error = True
+
+        if len(new_password1) < 8:
+            messages.error(request, "Password must be at least 8 characters long.")
+            has_error = True
+
+        if has_error:
+            return redirect('change_password')
+
+        request.user.set_password(new_password1)
+        request.user.change_password = False
+        request.user.save()
+        # update_session_auth_hash(request, request.user)
+        messages.success(request, "Your password has been updated successfully!")
+        return redirect('login_view')
+    return render(request, "vote/change_password.html")
 
 
 def consistent_color(text):

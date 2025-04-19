@@ -12,7 +12,7 @@
         </a>
         <!-- Title in the Center -->
         <div class="mx-auto text-center">
-            <a href="{% url 'index' %}" class="text-decoration-none">
+            <a href="{% url 'dashboard' %}" class="text-decoration-none">
                 <span class="navbar-title text-white fw-bold"> Vote<span class="text-danger">हालः</span> </span>
             </a>
         </div>
@@ -21,24 +21,23 @@
             {% if user.is_authenticated %}
                 <div class="dropdown">
                     <img src="{{ user.avatar.url }}"
-                        alt="Avatar"
-                        class="avatar dropdown-toggle"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                        height="50"
-                        width="50"
-                        onerror="this.onerror=null; this.src='{% static 'images/avatar.svg' %}';"
-                    />
-
+                         alt="Avatar"
+                         class="avatar dropdown-toggle"
+                         role="button"
+                         data-bs-toggle="dropdown"
+                         aria-expanded="false"
+                         height="50"
+                         width="50"
+                         onerror="this.onerror=null; this.src='{% static 'images/avatar.svg' %}';" />
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <a class="dropdown-item" href="{% url 'profile-view' %}">Profile</a>
-
+                            <a class="dropdown-item" href="{% url 'user-profile' %}">Profile</a>
                         </li>
-                        <li>
-                            <a class="dropdown-item" href="#">Admin Panel</a>
-                        </li>
+                        {% if user.is_staff %}
+                            <li>
+                                <a class="dropdown-item" href="{% url 'admin:index' %}">Admin Panel</a>
+                            </li>
+                        {% endif %}
                         <li>
                             <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
                         </li>

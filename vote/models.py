@@ -11,7 +11,7 @@ class User(AbstractUser):
     avatar = models.ImageField(null=True, default="avatar.svg")
     middle_name = models.CharField(max_length=100, null=True, blank=True)
     voter_id = models.CharField(max_length=100, unique=True, null=True, blank=True) 
-    voter_id_image = models.ImageField(null=True, blank=True)
+    voter_id_image = models.ImageField(null=True, blank=True, default="card.png")
     change_password = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
