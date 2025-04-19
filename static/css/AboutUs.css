@@ -1,0 +1,125 @@
+body {
+    background-color: #f7f4ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Section: Why Choose Voteहालः */
+  .why-vote-section {
+    padding: 60px 0;
+    text-align: center;
+  }
+  
+  .why-vote-section h2 {
+    font-weight: 700;
+  }
+  
+  .why-vote-section p.lead {
+    color: #6c757d;
+    margin-bottom: 50px;
+  }
+  
+  .feature-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature-icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+  
+  /* Section: About Us */
+  .about-section h2 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+  }
+  
+  .about-section p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  /* Team Section Styles */
+  .team-section {
+    background-color: #f8f9fa;
+  }
+  
+  .team-card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .team-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .team-card img {
+    border-radius: 50%;
+    margin-top: 20px;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+  }
+  
+  .team-card .card-body {
+    padding: 1.5rem;
+  }
+  
+  .team-card .card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .team-card .card-text {
+    font-size: 1rem;
+    color: #777;
+  }
+  
+  /* Responsive Grid Layout */
+  @media (max-width: 576px) {
+    .team-card img {
+      width: 100px;
+      height: 100px;
+    }
+  }
+  
+  @media (min-width: 576px) {
+    .team-card img {
+      width: 120px;
+      height: 120px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .team-card img {
+      width: 140px;
+      height: 140px;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .team-card img {
+      width: 150px;
+      height: 150px;
+    }
+  }
+  
+  /* Styling for section title */
+  .team-section h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #007bff;
+  }
+  
+  
