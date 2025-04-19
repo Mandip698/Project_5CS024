@@ -40,6 +40,14 @@ def dashboard(request):
     return render(request, 'vote/dashboard.html', {'polls': polls})
 
 
+def contact(request):
+    return render(request, 'vote/contact.html')
+
+
+def about(request):
+    return render(request, 'vote/about.html')
+
+
 def login_view(request):
     if 'next' in request.GET:
         messages.warning(request, 'User should be logged in to view this page.')
