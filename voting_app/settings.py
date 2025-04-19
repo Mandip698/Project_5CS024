@@ -217,6 +217,8 @@ MEDIA_ROOT = BASE_DIR / 'static/images'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+EXCELFILE_DIRS = BASE_DIR/'UserData.xlsx'
+IMPORT_MODE = "Excel"
 USER_API_LINK = os.getenv('USER_API_LINK')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
