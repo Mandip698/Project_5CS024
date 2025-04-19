@@ -1,5 +1,5 @@
 from django.urls import path
-from vote.views import change_password, index, about, contact, dashboard, login_view, verify_otp, logout_view, resend_otp, vote_poll, submit_vote, forgot_password_request, reset_password_after_otp
+from vote.views import change_password, index, about, contact, dashboard, login_view, verify_otp, logout_view, resend_otp, vote_poll, submit_vote, forgot_password_request, reset_password_after_otp, edit_profile
 
 urlpatterns = [
     path('', index, name="index"),
@@ -15,4 +15,5 @@ urlpatterns = [
     path("change-password/", change_password, name="change_password"),
     path('forgot-password/', forgot_password_request, name='forgot_password_request'),
     path('reset-password-otp/', reset_password_after_otp, name='reset_password_after_otp'),
+    path('edit-profile/', edit_profile, name='edit-profile'),
 ]

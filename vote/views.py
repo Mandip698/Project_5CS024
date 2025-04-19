@@ -46,8 +46,26 @@ def contact(request):
 
 def about(request):
     return render(request, 'vote/about.html')
+@login_required
+def edit_profile(request):
+    user = request.user
 
+    if request.method == 'POST':
+        user.first_name = request.POST.get('first_name')
+        user.middle_name = request.POST.get('middle_name')
+        user.last_name = request.POST.get('last_name')
 
+        if request.FILES.get('avatar'):
+            user.avatar = request.FILES['avatar']
+        if request.FILES.get('voter_id_image'):
+            user.voter_id_image = request.FILES['voter_id_image']
+
+        user.save()
+        messages.success(request, "Profile updated successfully.")
+        return redirect('edit-profile')
+
+    return render(request, 'user_profile_edit.html')
+    
 def login_view(request):
     if 'next' in request.GET:
         messages.warning(request, 'User should be logged in to view this page.')
@@ -68,6 +86,7 @@ def login_view(request):
             token = request.session.get("otp_token")
             if not user_id or not uid or not token:
                 return JsonResponse({'success': False, 'error': "OTP generation failed. Please try again."})
+            messages.success(request, f'Welcome {user.first_name}! You have logged in successfully.')
             return JsonResponse({
                 'success': True,
                 'show_otp_modal': True,
@@ -334,4 +353,5 @@ def reset_password_after_otp(request):
 
 def logout_view(request):
     logout(request)
+    messages.success(request, 'You have logged out successfully.')
     return redirect('index')
