@@ -12,7 +12,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        api_url = "settings.USER_API_LINK"
+        api_url = settings.USER_API_LINK
         required_fields = [
             "username", "first_name", "last_name",
             "is_superuser", "is_staff", "is_active", "email",
