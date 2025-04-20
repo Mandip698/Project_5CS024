@@ -28,6 +28,7 @@
                             </div>
                         </div>
                         <!-- Voter ID Column -->
+                         {% if user.voter_id_image.url %}
                         <div class="col-12 col-md-6 col-lg-4 ms-auto">
                             <div class="text-center">
                                 <img src="{{ user.voter_id_image.url }}"
@@ -47,6 +48,27 @@
                                 </div>
                             </div>
                         </div>
+                        {% else %}
+                        <div class="col-12 col-md-6 col-lg-4 ms-auto">
+                            <div class="text-center">
+                                <img src="{ % static 'images/card.png' % }"
+                                     alt="Voter ID"
+                                     class="rounded mb-2"
+                                     style="max-width: 100%;
+                                            height: 150px;
+                                            object-fit: contain"
+                                     onerror="this.onerror=null;this.src='{% static 'images/card.png' %}'">
+                                <p class="mb-2">Voter ID Image</p>
+                                <div class="d-flex justify-content-center">
+                                    <div style="width: 90%">
+                                        <input type="file"
+                                               name="voter_id_image"
+                                               class="form-control form-control-sm">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                     <!-- djlint:on H021 H006 -->
                     <div class="tab-content" id="profileTabsContent">

@@ -91,7 +91,7 @@ def user_profile(request):
 
         user.save()
         messages.success(request, "Profile updated successfully.")
-        return redirect('user-profile')
+        return redirect('dashboard')
     return render(request, 'vote/user_profile.html')
 
 
