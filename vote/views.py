@@ -27,6 +27,9 @@ def index(request):
     return render(request, 'vote/index.html')
 
 
+def registration(request):
+    return render(request, 'vote/registration.html')
+
 @login_required
 def dashboard(request):
     if 'next' in request.GET:
