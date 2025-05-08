@@ -1,11 +1,17 @@
 {
     "builds": [
         {
-            "src": "voting_app/wsgi.py",
+            "src": "core/wsgi.py",
             "use": "@vercel/python",
             "config": {
-                "maxLambdaSize": "15mb",
-                "runtime": "python3.12.3"
+                "maxLambdaSize": "15mb"
+            }
+        },
+        {
+            "src": "build_files.sh",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "staticfiles"
             }
         }
     ],
@@ -18,5 +24,6 @@
             "src": "/(.*)",
             "dest": "voting_app/wsgi.py"
         }
-    ]
+    ],
+    "outputDirectory": "staticfiles"
 }
