@@ -4,11 +4,6 @@ html {
     padding: 0;
 }
 
-.toast-top-right {
-    z-index: 1050 !important;
-    margin-top: 70px;
-}
-
 #spinnerOverlay {
     position: fixed;
     top: 0;

@@ -65,8 +65,6 @@ JAZZMIN_SETTINGS = {
         "vote.Options": "fas fa-list-ul",
         "vote.UserVotes": "fas fa-check-square",
     },
-
-
     # table ordering
     "order_with_respect_to": [
         "vote.User",
@@ -74,8 +72,6 @@ JAZZMIN_SETTINGS = {
         "vote.Options",
         "vote.UserVotes",
     ],
-    
-    
 }
 
 
@@ -202,14 +198,6 @@ STATICFILES_DIRS = [ BASE_DIR / 'static' ]
 
 LOGIN_URL = '/login_view/'
 
-# Session expires after 30 minutes of inactivity
-SESSION_COOKIE_AGE = 300  # seconds (30 mins)
-
-# If True, session expires when the browser is closed
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
-SESSION_SAVE_EVERY_REQUEST = True
-
 MEDIA_ROOT = BASE_DIR / 'static/images'
 
 # Default primary key field type
@@ -217,7 +205,7 @@ MEDIA_ROOT = BASE_DIR / 'static/images'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EXCELFILE_DIRS = BASE_DIR/'UserData.xlsx'
+EXCELFILE_DIRS = BASE_DIR/os.getenv('EXCEL_FILENAME')
 IMPORT_MODE = "Excel"
 USER_API_LINK = os.getenv('USER_API_LINK')
 
@@ -228,3 +216,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+AUTO_LOGOUT = {
+    'IDLE_TIME': 300,
+    'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
+    'MESSAGE': 'The session has expired. Please login again to continue.',
+}
