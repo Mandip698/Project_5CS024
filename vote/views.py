@@ -21,6 +21,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode 
+from django.views.decorators.csrf import csrf_exempt
 
 
 def index(request):
@@ -209,32 +210,35 @@ def verify_otp(request):
         return JsonResponse({'success': True, 'redirect_url': reverse('dashboard')})
     return JsonResponse({'success': False, 'error': "Invalid request method."})
 
+@csrf_exempt
+@require_http_methods(["POST"])
 
-@require_http_methods(["GET", "POST"])
 def resend_otp(request):
-    # Retrieve previously stored session data
     user_id = request.session.get("otp_user_id")
-    uid = request.session.get("otp_uid")
-    token = request.session.get("otp_token")
-    # If required session data is missing, show error
-    if not user_id or not uid or not token:
+
+    if not user_id:
         messages.error(request, "Session expired or invalid. Please login again.")
         return redirect("login_view")
+
     try:
-        # Clean up old OTP first
-        session_key = f'otp_{uid}_{token}'
-        request.session.pop(session_key, None)
-        # Regenerate new OTP
-        generate_otp(request, user_id)
-        user_id = request.session.get("otp_user_id")
-        uid = request.session.get("otp_uid")
-        token = request.session.get("otp_token")
-        if not user_id or not uid or not token:
-            messages.error(request, "OTP generation failed. Please try again.")
-            return redirect('login_view')
+        # Clear old OTP session data
+        old_uid = request.session.get("otp_uid")
+        old_token = request.session.get("otp_token")
+        if old_uid and old_token:
+            request.session.pop(f'otp_{old_uid}_{old_token}', None)
+            request.session.pop(f'otp_creation_{old_uid}_{old_token}', None)
+
+        # Generate and send new OTP
+        result = generate_otp(request, user_id)
+        if not result.get("success"):
+            messages.error(request, "Failed to resend OTP.")
+            return redirect("login_view")
+
+        messages.success(request, "A new OTP has been sent to your email.")
+        return redirect("verify_otp")  # make sure this is correctly named
+
     except Exception as e:
         messages.error(request, f"Failed to resend OTP. {str(e)}")
-        # Show error message if anything goes wrong
         return redirect("login_view")
 
 
