@@ -192,20 +192,18 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 MEDIA_URL = '/images/'
-
-STATICFILES_DIRS = [ BASE_DIR / 'static' ]
-
-LOGIN_URL = '/login_view/'
-
-MEDIA_ROOT = BASE_DIR / 'static/images'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EXCELFILE_DIRS = BASE_DIR/os.getenv('EXCEL_FILENAME')
+EXCELFILE_DIRS = os.path.join(BASE_DIR, os.getenv('EXCEL_FILENAME'))
 IMPORT_MODE = "Excel"
 USER_API_LINK = os.getenv('USER_API_LINK')
 
