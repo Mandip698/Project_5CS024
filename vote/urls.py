@@ -11,9 +11,9 @@ urlpatterns = [
     path('poll/vote/', submit_vote, name='submit_vote'),
     path("verify-otp/", verify_otp, name="verify_otp"),
     path("resend-otp/", resend_otp, name="resend_otp"),
+    path('user-profile/', user_profile, name='user-profile'),
     path('vote_poll/<int:poll_id>/', vote_poll, name='vote_poll'),
     path("change-password/", change_password, name="change_password"),
     path('forgot-password/', forgot_password_request, name='forgot_password_request'),
     path('reset-password-otp/', reset_password_after_otp, name='reset_password_after_otp'),
-    path('user-profile/', user_profile, name='user-profile'),
 ]
