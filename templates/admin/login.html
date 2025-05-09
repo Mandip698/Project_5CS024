@@ -62,13 +62,19 @@
 
     </style>
     <div class="login-container mt-5">
-        {% comment %} <div style="margin-bottom: 20px;">
-        <img src="{% static 'images/LOGO1.png' %}" alt="Voteहालः Logo" style="height: 80px;">
-        </div> {% endcomment %}
+        <!-- djlint:off H021 -->
+        <div style="margin-bottom: 20px;">
+            <img src="{% static 'images/Logo1.png' %}"
+                 alt="Voteहालः Logo"
+                 width="70"
+                 height="60"
+                 style="height: 80px">
+        </div>
+        <!-- djlint:on H021 -->
         <h1>
             Welcome to <span class="navbar-title text-white fw-bold">Vote<span class="text-danger">हालः</span></span>
         </h1>
-        <h4>Admin Area</h4>
+        <h4>Admin Panel</h4>
         <form action="{{ app_path }}" method="post">
             {% csrf_token %}
             {% if user.is_authenticated %}

@@ -1,4 +1,5 @@
 import math
+import uuid
 import string
 import secrets
 import requests
@@ -17,8 +18,7 @@ class Command(BaseCommand):
         try:
             required_fields = [
                 "username", "first_name", "last_name",
-                "is_superuser", "is_staff", "is_active", "email",
-                "voter_id", "date_joined"
+                "is_superuser", "is_staff", "is_active", "email", "date_joined"
             ]
 
             if settings.IMPORT_MODE == "API":
@@ -51,10 +51,9 @@ class Command(BaseCommand):
 
             new_users = [] 
             for user_data in users:
-                user = (
-                    User.objects.filter(username=user_data["username"]).first()
-                    or User.objects.filter(email=user_data["email"]).first()
-                )
+                user = User.objects.filter(username=user_data["username"]).first()
+                if not user:
+                    user = User.objects.filter(email=user_data["email"]).first()
                 is_new = False
                 if not user:
                     user = User(username=user_data["username"])
@@ -68,7 +67,6 @@ class Command(BaseCommand):
                 user.is_staff = user_data["is_staff"]
                 user.is_active = user_data["is_active"]
                 user.email = user_data["email"]
-                user.voter_id = user_data["voter_id"]
                 # Proper datetime parsing with timezone-awareness check
                 date_val = user_data["date_joined"]
                 if isinstance(date_val, pd.Timestamp):
@@ -79,23 +77,30 @@ class Command(BaseCommand):
                 if is_new:
                     generated_password = self.generate_random_password()
                     user.password = make_password(generated_password)
-                    new_users.append((user, generated_password))
+                    unique_id = self.generate_random_unique_id()
+                    user.voter_id = unique_id
+                    new_users.append((user, generated_password, unique_id))
                 user.save()
 
-            for user, generated_password in new_users:
+            for user, generated_password, unique_id in new_users:
                 subject = "Welcome to Voteहालः!"
                 body = (
                     f"Dear {user.first_name} {user.last_name},\n\n"
                     f"Your account has been created.\n"
                     f"Username: {user.username}\n"
-                    f"Password: {generated_password}\n\n"
+                    f"Email: {user.email}\n"
+                    f"Password: {generated_password}\n"
+                    f"Unique Voter Id: {unique_id}\n\n"
                     f"Please login and change your password immediately.\n\n"
-                    f"To login, please visit: http://localhost:8000/login_view/\n\n"
-                    f"When verifying with OTP, enter your OTP from mail and Voter Id provided by you. Example: OTPVoterId \n\n"
+                    f"Please copy or write down the Unique Voter Id as it is necessary to Vote.\n\n"
+                    f"To login, please visit: https://project-5cs024.onrender.com/login_view/\n\n"
                     f"If you have any questions, feel free to reach out.\n\n"
                     "Best regards,\nVoteहालः Team"
                 )
-                send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [user.email])
+                try:
+                    send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, [user.email])
+                except Exception as e:
+                    self.stderr.write(f"Failed to send email to {user.email}: {e}")
 
             self.stdout.write(self.style.SUCCESS("All users imported and sent mail successfully."))
         except Exception as e:
@@ -104,3 +109,7 @@ class Command(BaseCommand):
     def generate_random_password(self, length=10):
         alphabet = string.ascii_letters + string.digits
         return ''.join(secrets.choice(alphabet) for _ in range(length))
+
+    def generate_random_unique_id(self):
+        return uuid.uuid4().hex
+
