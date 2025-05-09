@@ -115,8 +115,13 @@ def send_otp(request, user_id, mail_type="login"):
         print(f"Session keys: {request.session.keys()}")  # Log all session keys
 
         # Send OTP via email
-        subject = "Resend Login OTP" if mail_type == "resend" else "Verify Login With OTP"
-        message = f"Your verification code is: {otp}" if mail_type =="resent" else f"Your new verification code is: {otp}"
+        if mail_type == "resend":
+            subject = "Your OTP Code Has Been Resent"
+            message = f"Hi {user.first_name},\n\nYou requested a new OTP. Your verification code is: {otp}\n\nIf you did not request this, please ignore this email."
+        else:
+            subject = "Verify Your Login - OTP Code"
+            message = f"Hi {user.first_name},\n\nTo complete your login, please enter the following verification code: {otp}\n\nThis code is valid for the next 3 minutes. If the OTP expired , please request a new one clicking resend otp button."
+
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
         # Store UID and Token for later verification
