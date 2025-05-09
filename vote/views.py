@@ -95,6 +95,42 @@ def user_profile(request):
         return redirect('dashboard')
     return render(request, 'vote/user_profile.html')
 
+def send_otp(request, user_id, mail_type="login"):
+    try:
+        user = User.objects.get(pk=user_id)
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+        otp = ''.join(str(secrets.randbelow(10)) for _ in range(6))
+        otp_creation_key = f'otp_creation_{uid}_{token}'
+        session_key = f'otp_{uid}_{token}'
+
+        # Store the creation time and OTP in session
+        request.session[otp_creation_key] = timezone.now().isoformat()
+        request.session[session_key] = otp
+        
+        # Debugging: Log session contents
+        print(f"OTP Generated: {otp}")
+        print(f"Session key for OTP: {session_key}")
+        print(f"Session keys: {request.session.keys()}")  # Log all session keys
+
+        # Send OTP via email
+        subject = "Resend Login OTP" if mail_type == "resend" else "Verify Login With OTP"
+        message = f"Your verification code is: {otp}" if mail_type =="resent" else f"Your new verification code is: {otp}"
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+
+        # Store UID and Token for later verification
+        request.session["otp_user_id"] = user.id
+        request.session["otp_uid"] = uid
+        request.session["otp_token"] = token
+        request.session.set_expiry(180)  # Session expiration time in seconds
+
+        return {"uid": uid, "token": token, "success": True}
+    except ObjectDoesNotExist:
+        return {"error": "User not found.", "success": False}
+
+
+
 
 def login_view(request):
     if 'next' in request.GET:
@@ -126,47 +162,81 @@ def login_view(request):
             return JsonResponse({'success': False, 'error': "Invalid credentials."})
     return render(request, 'vote/login.html')
 
-
 def generate_otp(request, user_id):
     try:
-        # getting user data using its primary key
+        # Fetch the user by user_id
         user = User.objects.get(pk=user_id)
-         # Generating a token to validate the OTP request
-        token = default_token_generator.make_token(user)
-        # Encode the user ID to a safe base64 format
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        
-        #generating random 6-digit OTP
-        otp = ''.join(str(secrets.randbelow(10)) for _ in range(6))
-        # Saving OTP and metadata in session
-        otp_creation_key = f'otp_creation_{uid}_{token}'
-        session_key = f'otp_{uid}_{token}'
-        # Saving the OTP and timestamp to session for validation later
-        request.session[otp_creation_key] = timezone.now().isoformat()
-        request.session[session_key] = otp
-         # Compose and send the OTP via email
-        subject = "Verify Login With OTP"
-        message = f"Your verification code is: {otp}"
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
-        # Store metadata for resending
-        request.session["otp_user_id"] = user.id
-        request.session["otp_uid"] = uid
-        request.session["otp_token"] = token
-        # Session expires in 3 minutes
-        request.session.set_expiry(180)
-        return {"uid": uid, "token": token, "success": True}
-    except ObjectDoesNotExist:
-        # If user is not found in the database
+
+        # Call the send_otp function to send OTP to the user
+        return send_otp(request, user.id)
+
+    except User.DoesNotExist:
         return {"error": "User not found.", "success": False}
+
+
+
+
+# def verify_otp(request):
+#     if request.method == "POST":
+#         # Getting submitted data
+#         uidb64 = request.POST.get("uid")
+#         token = request.POST.get("token")
+#         otp_input = request.POST.get("otp", "")
+#      # First 6 characters: OTP, remaining: voter ID
+#         input_otp = otp_input[:6]
+#         input_voter_id = otp_input[6:]
+
+#         def error_response(msg):
+#             return JsonResponse({'success': False, 'error': msg})
+
+#         try:
+#             # Decode UID and retrieve the user
+#             uid = urlsafe_base64_decode(uidb64).decode()
+#             user = User.objects.get(pk=uid)
+#         except (User.DoesNotExist, ValueError, TypeError):
+#             return error_response("Invalid user.")
+#         # Check if token is still valid
+
+#         if not default_token_generator.check_token(user, token):
+#             return error_response("Invalid or expired token.")
+#         # Fetch stored OTP and creation time from session
+#         session_key = f'otp_{uidb64}_{token}'
+#         otp_creation_key = f'otp_creation_{uidb64}_{token}'
+#         stored_otp = request.session.get(session_key)
+#         if not stored_otp:
+#             return error_response("OTP expired or not found.")
+#         # Check if the OTP is still within the valid time window
+#         otp_creation_str = request.session.get(otp_creation_key)
+#         if otp_creation_str:
+#             otp_creation_time = parse_datetime(otp_creation_str)
+#             if timezone.now() > otp_creation_time + timedelta(seconds=120):
+#                 return error_response("OTP has expired.")
+#             # Final check: entered OTP and voter ID must match
+#         if input_otp != stored_otp or user.voter_id != input_voter_id:
+#             return error_response("Incorrect OTP.")
+#         # Clean up session keys once OTP is used
+#         request.session.pop(session_key, None)
+#         request.session.pop(otp_creation_key, None)
+#          # Log the user in
+#         login(request, user)
+#         messages.success(request, f'Welcome {user.first_name}! You have logged in successfully.')
+#          # Redirect to password change page if required
+#         if user.change_password:
+#             return JsonResponse({'success': True, 'redirect_url': reverse('change_password')})
+#         return JsonResponse({'success': True, 'redirect_url': reverse('dashboard')})
+#     return JsonResponse({'success': False, 'error': "Invalid request method."})
+
+
 
 
 def verify_otp(request):
     if request.method == "POST":
         # Getting submitted data
-        uidb64 = request.POST.get("uid")
-        token = request.POST.get("token")
+        uidb64 = request.session.get("otp_uid")
+        token = request.session.get("otp_token")
+
         otp_input = request.POST.get("otp", "")
-     # First 6 characters: OTP, remaining: voter ID
+        # First 6 characters: OTP, remaining: voter ID
         input_otp = otp_input[:6]
         input_voter_id = otp_input[6:]
 
@@ -179,67 +249,80 @@ def verify_otp(request):
             user = User.objects.get(pk=uid)
         except (User.DoesNotExist, ValueError, TypeError):
             return error_response("Invalid user.")
+        
         # Check if token is still valid
-
         if not default_token_generator.check_token(user, token):
             return error_response("Invalid or expired token.")
+        
         # Fetch stored OTP and creation time from session
         session_key = f'otp_{uidb64}_{token}'
         otp_creation_key = f'otp_creation_{uidb64}_{token}'
         stored_otp = request.session.get(session_key)
+        
+        # Debugging: Check what's in the session for OTP
+        print("Stored OTP in session:", stored_otp)
+        print("Session keys:", list(request.session.keys()))  # Print all session keys for debugging
+        
         if not stored_otp:
             return error_response("OTP expired or not found.")
+        
         # Check if the OTP is still within the valid time window
         otp_creation_str = request.session.get(otp_creation_key)
         if otp_creation_str:
             otp_creation_time = parse_datetime(otp_creation_str)
-            if timezone.now() > otp_creation_time + timedelta(seconds=120):
+            print("OTP creation time:", otp_creation_time)  # Debugging
+            if timezone.now() > otp_creation_time + timedelta(seconds=120):  # OTP expiry after 2 minutes
                 return error_response("OTP has expired.")
-            # Final check: entered OTP and voter ID must match
+        
+        # Final check: entered OTP and voter ID must match
+        print("Input OTP:", input_otp)
+        print("Stored OTP:", stored_otp)
         if input_otp != stored_otp or user.voter_id != input_voter_id:
             return error_response("Incorrect OTP.")
+        
         # Clean up session keys once OTP is used
         request.session.pop(session_key, None)
         request.session.pop(otp_creation_key, None)
-         # Log the user in
+        
+        # Log the user in
         login(request, user)
         messages.success(request, f'Welcome {user.first_name}! You have logged in successfully.')
-         # Redirect to password change page if required
+
+        # Redirect to password change page if required
         if user.change_password:
             return JsonResponse({'success': True, 'redirect_url': reverse('change_password')})
+
         return JsonResponse({'success': True, 'redirect_url': reverse('dashboard')})
+
     return JsonResponse({'success': False, 'error': "Invalid request method."})
+
 
 @csrf_exempt
 @require_http_methods(["POST"])
-
 def resend_otp(request):
     user_id = request.session.get("otp_user_id")
 
     if not user_id:
-        messages.error(request, "Session expired or invalid. Please login again.")
-        return redirect("login_view")
+        return JsonResponse({"success": False, "error": "Session expired. Please login again."})
 
     try:
-        # Clear old OTP session data
         old_uid = request.session.get("otp_uid")
         old_token = request.session.get("otp_token")
         if old_uid and old_token:
             request.session.pop(f'otp_{old_uid}_{old_token}', None)
             request.session.pop(f'otp_creation_{old_uid}_{old_token}', None)
+        keys_to_delete = [key for key in request.session.keys() if key.startswith('otp_')]
+        for key in keys_to_delete:
+            del request.session[key]
 
-        # Generate and send new OTP
-        result = generate_otp(request, user_id)
+        # Use the same logic as generate_otp but as a reusable function
+        result = send_otp(request, user_id, mail_type="resend")
         if not result.get("success"):
-            messages.error(request, "Failed to resend OTP.")
-            return redirect("login_view")
+            return JsonResponse({"success": False, "error": "Failed to resend OTP."})
 
-        messages.success(request, "A new OTP has been sent to your email.")
-        return redirect("verify_otp")  # make sure this is correctly named
-
+        return JsonResponse({"success": True, "message": "OTP resent successfully."})
     except Exception as e:
-        messages.error(request, f"Failed to resend OTP. {str(e)}")
-        return redirect("login_view")
+        return JsonResponse({"success": False, "error": str(e)})
 
 
 @login_required

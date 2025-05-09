@@ -42,22 +42,23 @@ document.getElementById("resendBtn").addEventListener("click", function () {
         method: "POST",
         headers: {
             "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
         },
-        body: new FormData(), // even if empty, still mimics a real form POST
+        body: JSON.stringify({ resend: true }) // dummy payload
     })
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error("Network response was not ok");
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.success) {
+                toastr.success("OTP resent successfully.");
+            } else {
+                toastr.error(data.error || "Failed to resend OTP.");
             }
-            return res.text();
-        })
-        .then((html) => {
-            toastr.success("OTP resent successfully.");
         })
         .catch((err) => {
-            toastr.error("Resend OTP failed.", err.message);
+            toastr.error("Network error during resend OTP.");
         })
         .finally(() => {
             spinnerOverlay.style.display = "none";
         });
 });
+
