@@ -159,8 +159,6 @@ def verify_otp(request):
         uidb64 = request.POST.get("uid")
         token = request.POST.get("token")
         otp_input = request.POST.get("otp", "")
-        input_otp = otp_input[:6]
-        input_voter_id = otp_input[6:]
 
         def error_response(msg):
             return JsonResponse({'success': False, 'error': msg})
@@ -182,7 +180,7 @@ def verify_otp(request):
             otp_creation_time = parse_datetime(otp_creation_str)
             if timezone.now() > otp_creation_time + timedelta(seconds=120):
                 return error_response("OTP has expired.")
-        if input_otp != stored_otp or user.voter_id != input_voter_id:
+        if otp_input != stored_otp :
             return error_response("Incorrect OTP.")
         request.session.pop(session_key, None)
         request.session.pop(otp_creation_key, None)

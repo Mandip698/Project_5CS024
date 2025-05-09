@@ -53,11 +53,12 @@ JAZZMIN_SETTINGS = {
     "login_logo": None,  
     "login_logo_dark": None,
     "site_header": "Voteहालः", 
-    "site_logo": "images/LOGO1.png",
+    "site_logo": "images/Logo1.png",
     "site_logo_classes": "img-circle", 
     "site_brand": "Voteहालः", 
-    "copyright": "© 2025 Voteहालः",
+    "copyright": "Voteहालः",
     "show_ui_builder": True,
+    "custom_css": "css/custom/admin_logo.css",
     # App and model icons
     "icons": {
         "vote.User": "fas fa-user",
