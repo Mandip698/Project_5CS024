@@ -33,3 +33,32 @@ document.getElementById("otpForm").addEventListener("submit", function (e) {
             spinnerOverlay.style.display = "none";
         });
 });
+
+document.getElementById("resendBtn").addEventListener("click", function () {
+    const spinnerOverlay = document.getElementById("spinnerOverlay");
+    spinnerOverlay.style.display = "block";
+
+    fetch("/resend-otp/", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ resend: true }) // dummy payload
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.success) {
+                toastr.success("OTP resent successfully.");
+            } else {
+                toastr.error(data.error || "Failed to resend OTP.");
+            }
+        })
+        .catch((err) => {
+            toastr.error("Network error during resend OTP.");
+        })
+        .finally(() => {
+            spinnerOverlay.style.display = "none";
+        });
+});
+

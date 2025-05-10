@@ -51,12 +51,18 @@ class OptionsInline(admin.TabularInline):
 
 # Admin view for Poll to manage topics and options
 class PollAdmin(admin.ModelAdmin):
+    # Fields to show in the admin list view for polls
     list_display = ('topic', 'start_date', 'end_date', 'status', 'created_by', 'updated_by', 'created_on', 'updated_on')
+    # Fields that are always read-only in the form
     readonly_fields = ('created_on', 'updated_on','created_by', 'updated_by')
-    search_fields = ('topic', 'created_by')
+    # Allow admin to search polls by topic or who created it
+    search_fields = ('topic', 'created_by__username','status')
+    # Add filter options for the 'status' field
     list_filter = ('status',)
-    inlines = [OptionsInline]
+    # Allow editing poll options inline (related model)
 
+    inlines = [OptionsInline]
+     # Organize the form fields into sections in the admin panel
     fieldsets = (
         (None, {
             'fields': ('topic', 'description', 'start_date', 'end_date', 'status', 'created_by', 'updated_by')
@@ -67,14 +73,14 @@ class PollAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         })
     )
-    
+    # Dynamically make fields read-only if the poll is already live
     def get_readonly_fields(self, request, obj=None):
         if obj and obj.status == 'live':
             # Make all fields readonly if status is 'live'
             all_fields = [field.name for field in self.model._meta.fields]
             return all_fields
         return super().get_readonly_fields(request, obj)
-
+     # Customize the change form view in the admin
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
         obj = self.get_object(request, object_id)
         if obj and obj.status == 'live':
@@ -84,7 +90,7 @@ class PollAdmin(admin.ModelAdmin):
             extra_context['show_save_and_add_another'] = False
             messages.warning(request, "This poll is live and cannot be edited.")
         return super().changeform_view(request, object_id, form_url, extra_context)
-
+     # Automatically track which admin created/updated the poll
     def save_model(self, request, obj, form, change):
         if not change:
             obj.created_by = request.user

@@ -50,12 +50,14 @@ class UserVote(models.Model):
     """
     Records a user's vote for a specific option in a poll.
     """
-    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    option = models.ForeignKey(Option, null=True,on_delete=models.CASCADE)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE) # links the vote to a specific poll
+    user = models.ForeignKey(User, on_delete=models.CASCADE) # links the vote to the user who casts it
+    option = models.ForeignKey(Option, null=True,on_delete=models.CASCADE) # Links to the specific option the user chose
     timestamp = models.DateTimeField(auto_now_add=True)
-
+    
+    # A user can vote only once in each poll.
     class Meta:
+        # list of constraints 
         constraints = [
             models.UniqueConstraint(fields=['poll', 'user'], name='unique_vote_per_user_per_poll')
         ]
