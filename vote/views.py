@@ -37,15 +37,10 @@ def dashboard(request):
         if poll.end_date < timezone.now() and poll.status != "closed":
             poll.status = "closed"
             poll.save()
-    # Filter based on GET
-    status_filter = request.GET.get('status')
-    if status_filter in ['live', 'closed', 'pending']:
-        polls = polls.filter(status=status_filter)
+    
 
-    return render(request, 'vote/dashboard.html', {
-        'polls': polls,
-        'status_filter': status_filter
-    })
+    return render(request, 'vote/dashboard.html', {'polls': polls,})
+
 def contact(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -186,57 +181,6 @@ def generate_otp(request, user_id):
         return {"error": "User not found.", "success": False}
 
 
-
-
-# def verify_otp(request):
-#     if request.method == "POST":
-#         # Getting submitted data
-#         uidb64 = request.POST.get("uid")
-#         token = request.POST.get("token")
-#         otp_input = request.POST.get("otp", "")
-#      # First 6 characters: OTP, remaining: voter ID
-#         input_otp = otp_input[:6]
-#         input_voter_id = otp_input[6:]
-
-#         def error_response(msg):
-#             return JsonResponse({'success': False, 'error': msg})
-
-#         try:
-#             # Decode UID and retrieve the user
-#             uid = urlsafe_base64_decode(uidb64).decode()
-#             user = User.objects.get(pk=uid)
-#         except (User.DoesNotExist, ValueError, TypeError):
-#             return error_response("Invalid user.")
-#         # Check if token is still valid
-
-#         if not default_token_generator.check_token(user, token):
-#             return error_response("Invalid or expired token.")
-#         # Fetch stored OTP and creation time from session
-#         session_key = f'otp_{uidb64}_{token}'
-#         otp_creation_key = f'otp_creation_{uidb64}_{token}'
-#         stored_otp = request.session.get(session_key)
-#         if not stored_otp:
-#             return error_response("OTP expired or not found.")
-#         # Check if the OTP is still within the valid time window
-#         otp_creation_str = request.session.get(otp_creation_key)
-#         if otp_creation_str:
-#             otp_creation_time = parse_datetime(otp_creation_str)
-#             if timezone.now() > otp_creation_time + timedelta(seconds=120):
-#                 return error_response("OTP has expired.")
-#             # Final check: entered OTP and voter ID must match
-#         if input_otp != stored_otp or user.voter_id != input_voter_id:
-#             return error_response("Incorrect OTP.")
-#         # Clean up session keys once OTP is used
-#         request.session.pop(session_key, None)
-#         request.session.pop(otp_creation_key, None)
-#          # Log the user in
-#         login(request, user)
-#         messages.success(request, f'Welcome {user.first_name}! You have logged in successfully.')
-#          # Redirect to password change page if required
-#         if user.change_password:
-#             return JsonResponse({'success': True, 'redirect_url': reverse('change_password')})
-#         return JsonResponse({'success': True, 'redirect_url': reverse('dashboard')})
-#     return JsonResponse({'success': False, 'error': "Invalid request method."})
 
 
 
