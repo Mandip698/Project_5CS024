@@ -23,12 +23,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode 
 
 
+
 def index(request):
     return render(request, 'vote/index.html')
 
 
 def registration(request):
-    return render(request, 'vote/registration.html')
+    return render(request, 'registration.html')
 
 @login_required
 def dashboard(request):
@@ -127,6 +128,10 @@ def login_view(request):
         else:
             return JsonResponse({'success': False, 'error': "Invalid credentials."})
     return render(request, 'vote/login.html')
+
+def register_view(request):
+    # your logic here
+    return render(request, 'registration.html')
 
 
 def generate_otp(request, user_id):

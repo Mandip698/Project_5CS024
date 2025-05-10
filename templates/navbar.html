@@ -45,7 +45,9 @@
                 </div>
                 <h4>{{ user.username }}</h4>
             {% else %}
-                <a class="btn btn-success btn-lg" href="{% url 'login_view' %}">Login</a>
+                <a class="login-btn" href="{% url 'login_view' %}">Login</a>
+                <a class="register-btn" href="{% url 'registration' %}">Register</a>
+
             {% endif %}
         </div>
     </div>

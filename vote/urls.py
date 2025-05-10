@@ -1,5 +1,5 @@
 from django.urls import path
-from vote.views import change_password, index, about, contact, dashboard, login_view, verify_otp, logout_view, registration, resend_otp, vote_poll, submit_vote, forgot_password_request, reset_password_after_otp, user_profile
+from vote.views import change_password, index, about, contact, dashboard, login_view, register_view, verify_otp, logout_view, registration, resend_otp, vote_poll, submit_vote, forgot_password_request, reset_password_after_otp, user_profile
 
 urlpatterns = [
     path('', index, name="index"),
