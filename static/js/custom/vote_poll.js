@@ -49,6 +49,48 @@ document.addEventListener("DOMContentLoaded", function () {
     voteButton.addEventListener("click", function (e) {
         e.preventDefault();
         const selected = document.querySelector('input[name="poll-option"]:checked');
+        if (!selected) {
+            toastr.warning("Please select an option before verifying.");
+            return;
+        }
+        // Show voter verification modal
+        const voterModal = new bootstrap.Modal(document.getElementById("voterModal"));
+        voterModal.show();
+    });
+
+    document.getElementById("voterForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const voterId = document.getElementById("voter").value;
+        const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+        fetch("/verify-voter/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+            },
+            body: JSON.stringify({ voter: voterId }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    const modalEl = document.getElementById("voterModal");
+                    const voterModal = bootstrap.Modal.getInstance(modalEl);
+                    voterModal.hide();
+                    castVote(); // call vote submission after verification
+                } else {
+                    toastr.error(data.message || "Verification failed.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error verifying voter:", error);
+                toastr.error("Something went wrong.");
+            });
+    });
+
+    function castVote() {
+        const selected = document.querySelector('input[name="poll-option"]:checked');
         if (!selected) return;
 
         const optionId = parseInt(selected.value);
@@ -71,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     toastr.error(data.error);
                     return;
                 }
+
                 const votedOption = pollData.options.find((opt) => opt.id === data.option_id);
                 if (votedOption) votedOption.votes = data.votes;
 
@@ -84,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 toastr.error("Vote failed.");
                 console.error("Vote failed:", err);
             });
-    });
+    }
 
     function showResults() {
         votingForm.style.display = "none";
