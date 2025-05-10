@@ -172,7 +172,8 @@ def login_view(request):
         else:
             return JsonResponse({'success': False, 'error': "Invalid credentials."})
     return render(request, 'vote/login.html')
-
+def register_view(request):
+    return render(request, 'vote/register.html')
 def generate_otp(request, user_id):
     try:
         # Fetch the user by user_id
