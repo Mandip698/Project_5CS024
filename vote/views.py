@@ -28,6 +28,9 @@ def index(request):
     return render(request, 'vote/index.html')
 
 
+def registration(request):
+    return render(request, 'vote/registration.html')
+
 @login_required
 def dashboard(request):
     if 'next' in request.GET:
@@ -192,9 +195,6 @@ def verify_otp(request):
         token = request.session.get("otp_token")
 
         otp_input = request.POST.get("otp", "")
-        # First 6 characters: OTP, remaining: voter ID
-        input_otp = otp_input[:6]
-        input_voter_id = otp_input[6:]
 
         def error_response(msg):
             return JsonResponse({'success': False, 'error': msg})
@@ -229,11 +229,8 @@ def verify_otp(request):
             print("OTP creation time:", otp_creation_time)  # Debugging
             if timezone.now() > otp_creation_time + timedelta(seconds=120):  # OTP expiry after 2 minutes
                 return error_response("OTP has expired.")
-        
-        # Final check: entered OTP and voter ID must match
-        print("Input OTP:", input_otp)
-        print("Stored OTP:", stored_otp)
-        if input_otp != stored_otp or user.voter_id != input_voter_id:
+
+        if otp_input != stored_otp :
             return error_response("Incorrect OTP.")
         
         # Clean up session keys once OTP is used

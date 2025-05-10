@@ -53,11 +53,12 @@ JAZZMIN_SETTINGS = {
     "login_logo": None,  
     "login_logo_dark": None,
     "site_header": "Voteहालः", 
-    "site_logo": "images/LOGO1.png",
+    "site_logo": "images/Logo1.png",
     "site_logo_classes": "img-circle", 
     "site_brand": "Voteहालः", 
-    "copyright": "© 2025 Voteहालः",
+    "copyright": "Voteहालः",
     "show_ui_builder": True,
+    "custom_css": "css/custom/admin_logo.css",
     # App and model icons
     "icons": {
         "vote.User": "fas fa-user",
@@ -65,8 +66,6 @@ JAZZMIN_SETTINGS = {
         "vote.Options": "fas fa-list-ul",
         "vote.UserVotes": "fas fa-check-square",
     },
-
-
     # table ordering
     "order_with_respect_to": [
         "vote.User",
@@ -74,8 +73,6 @@ JAZZMIN_SETTINGS = {
         "vote.Options",
         "vote.UserVotes",
     ],
-    
-    
 }
 
 
@@ -196,28 +193,18 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 MEDIA_URL = '/images/'
-
-STATICFILES_DIRS = [ BASE_DIR / 'static' ]
-
-LOGIN_URL = '/login_view/'
-
-# Session expires after 30 minutes of inactivity
-SESSION_COOKIE_AGE = 300  # seconds (30 mins)
-
-# If True, session expires when the browser is closed
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
-SESSION_SAVE_EVERY_REQUEST = True
-
-MEDIA_ROOT = BASE_DIR / 'static/images'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EXCELFILE_DIRS = BASE_DIR/'UserData.xlsx'
+EXCELFILE_DIRS = os.path.join(BASE_DIR, os.getenv('EXCEL_FILENAME'))
 IMPORT_MODE = "Excel"
 USER_API_LINK = os.getenv('USER_API_LINK')
 
@@ -228,3 +215,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+AUTO_LOGOUT = {
+    'IDLE_TIME': 300,
+    'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
+    'MESSAGE': 'The session has expired. Please login again to continue.',
+}
