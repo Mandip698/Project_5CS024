@@ -1,6 +1,8 @@
 {% extends "main.html" %}
 {% block content %}
     {% load static %}
+    <p>Raw GET status: {{ request.GET.status }}</p>
+
     <div class="container my-5">
         <div class="table-responsive">
             <table id="table"
@@ -11,6 +13,23 @@
                    data-search="true"
                    data-show-jump-to="true"
                    data-side-pagination="client">
+<form method="get" action="{% url 'dashboard' %}" class="mb-3">
+    <label for="status">Filter by status:</label>
+    <select name="status" id="status" class="form-select w-auto d-inline mx-2">
+        <option value="">All</option>
+        <option value="live" {% if status_filter == 'live' %}selected{% endif %}>Live</option>
+        <option value="closed" {% if status_filter == 'closed' %}selected{% endif %}>Closed</option>
+        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<p class="text-muted">Selected status: {{ status_filter|default:"All" }}</p>
+
+
+
+
+
                 <thead>
                     <tr class="table-header text-center">
                         <th data-field="polls" data-sortable="true">Polls</th>

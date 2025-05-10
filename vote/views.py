@@ -37,9 +37,15 @@ def dashboard(request):
         if poll.end_date < timezone.now() and poll.status != "closed":
             poll.status = "closed"
             poll.save()
-    return render(request, 'vote/dashboard.html', {'polls': polls})
+    # Filter based on GET
+    status_filter = request.GET.get('status')
+    if status_filter in ['live', 'closed', 'pending']:
+        polls = polls.filter(status=status_filter)
 
-
+    return render(request, 'vote/dashboard.html', {
+        'polls': polls,
+        'status_filter': status_filter
+    })
 def contact(request):
     if request.method == 'POST':
         name = request.POST.get('name')

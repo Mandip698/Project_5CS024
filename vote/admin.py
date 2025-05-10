@@ -56,7 +56,7 @@ class PollAdmin(admin.ModelAdmin):
     # Fields that are always read-only in the form
     readonly_fields = ('created_on', 'updated_on','created_by', 'updated_by')
     # Allow admin to search polls by topic or who created it
-    search_fields = ('topic', 'created_by')
+    search_fields = ('topic', 'created_by__username','status')
     # Add filter options for the 'status' field
     list_filter = ('status',)
     # Allow editing poll options inline (related model)
