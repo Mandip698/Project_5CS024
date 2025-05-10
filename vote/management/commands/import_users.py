@@ -1,7 +1,4 @@
 import math
-import uuid
-import string
-import secrets
 import requests
 import pandas as pd
 from vote.models import User
@@ -11,6 +8,7 @@ from dateutil.parser import parse as parse_date
 from django.utils.timezone import make_aware
 from django.contrib.auth.hashers import make_password
 from django.core.management.base import BaseCommand, CommandError
+from vote.utils import generate_random_password, generate_random_unique_id
 
 
 class Command(BaseCommand):
@@ -75,9 +73,9 @@ class Command(BaseCommand):
                     dt = parse_date(str(date_val))
                 user.date_joined = make_aware(dt) if dt.tzinfo is None else dt
                 if is_new:
-                    generated_password = self.generate_random_password()
+                    generated_password = generate_random_password()
                     user.password = make_password(generated_password)
-                    unique_id = self.generate_random_unique_id()
+                    unique_id = generate_random_unique_id()
                     user.voter_id = unique_id
                     new_users.append((user, generated_password, unique_id))
                 user.save()
@@ -105,11 +103,4 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS("All users imported and sent mail successfully."))
         except Exception as e:
             raise CommandError(str(e))
-
-    def generate_random_password(self, length=10):
-        alphabet = string.ascii_letters + string.digits
-        return ''.join(secrets.choice(alphabet) for _ in range(length))
-
-    def generate_random_unique_id(self):
-        return uuid.uuid4().hex
 
