@@ -468,6 +468,24 @@ def reset_password_after_otp(request):
         return JsonResponse({'success': False, 'error': str(e)})
 
 
+def verify_voter(request):
+    try:
+        data = json.loads(request.body)
+        input_voter_id = data.get("voter")
+
+        # Get current logged-in user's voter_id
+        user_voter_id = request.user.voter_id
+
+        if str(input_voter_id).strip() == str(user_voter_id).strip():
+            return JsonResponse({'status': 'success', 'message': 'Voter verified successfully.'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Voter ID does not match your account.'}, status=403)
+    except json.JSONDecodeError:
+        return JsonResponse({'status': 'error', 'message': 'Invalid JSON format.'}, status=400)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have logged out successfully.')
