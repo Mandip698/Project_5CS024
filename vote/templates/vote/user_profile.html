@@ -106,6 +106,14 @@
                                        required>
                             </div>
                             <div class="mb-3">
+                                <label class="form-label">DOB</label>
+                                <input type="date"
+                                       class="form-control"
+                                       name="dob"
+                                       value="{{ user.dob|date:'Y-m-d' }}"
+                                       required>
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" class="form-control" value="{{ user.email }}" readonly>
                             </div>
