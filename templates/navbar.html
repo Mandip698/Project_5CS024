@@ -45,9 +45,16 @@
                 </div>
                 <h4>{{ user.username }}</h4>
             {% else %}
-                <a class="login-btn" href="{% url 'login_view' %}">Login</a>
-                <a class="register-btn" href="{% url 'registration' %}">Register</a>
-
+                {% if request.resolver_match.url_name == 'index' %}
+                    <a class="btn btn-primary" href="{% url 'registration' %}">SignUp</a>
+                    <div class="vr mx-2"></div>
+                    <a class="btn btn-success" href="{% url 'login_view' %}">Login</a>
+                {% endif %}
+                {% if request.resolver_match.url_name == 'login_view' %}
+                    <a class="btn btn-primary" href="{% url 'registration' %}">SignUp</a>
+                {% elif request.resolver_match.url_name == 'registration' %}
+                    <a class="btn btn-success" href="{% url 'login_view' %}">Login</a>
+                {% endif %}
             {% endif %}
         </div>
     </div>

@@ -1,34 +1,30 @@
 {% load static %}
 <div class="modal fade"
-     id="otpModal"
+     id="voterModal"
      tabindex="-1"
-     aria-labelledby="otpModalLabel"
+     aria-labelledby="voterModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="otpModalLabel">Verify OTP</h5>
+                <h5 class="modal-title" id="voterModalLabel">Verify OTP</h5>
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="otpForm" method="post" action="{% url 'verify_otp' %}">
+                <form id="voterForm" method="post" action="{% url 'verify_voter' %}">
                     {% csrf_token %}
-                    <input type="hidden" name="uid" value="" />
-                    <input type="hidden" name="token" value="" />
                     <div class="mb-3">
-                        <label for="otp" class="form-label">Enter OTP</label>
-                        <input type="text" name="otp" id="otp" class="form-control" required />
+                        <label for="voter" class="form-label">Enter Voter Id</label>
+                        <input type="text" name="voter" id="voter" class="form-control" required />
                     </div>
                     <div class="d-flex justify-content-between mt-3">
                         <button type="submit" class="btn btn-primary">Verify</button>
-                        <button type="button" id="resendBtn" class="btn btn-link">Resend OTP</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<script src="{% static 'js/custom/otp.js' %}"></script>
