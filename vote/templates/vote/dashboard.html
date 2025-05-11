@@ -1,19 +1,18 @@
 {% extends "main.html" %}
 {% block content %}
     {% load static %}
-    <p>Raw GET status: {{ request.GET.status }}</p>
-
     <div class="container my-5">
         <div class="table-responsive">
             <table id="table"
                    class="table table-borderless table-striped table-hover"
                    data-pagination="true"
+                   {% comment %}
                    data-show-toggle="true"
+                   {% endcomment %}
                    data-card-view="true"
                    data-search="true"
                    data-show-jump-to="true"
                    data-side-pagination="client">
-
                 <thead>
                     <tr class="table-header text-center">
                         <th data-field="polls" data-sortable="true">Polls</th>

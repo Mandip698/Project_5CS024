@@ -28,7 +28,7 @@
                                 </div>
                             {% endfor %}
                             <button id="vote-button"
-                                    class="vote-button"
+                                    class="vote-button btn btn-primary"
                                     {% if user_voted_option_id or poll.status != "live" %}disabled{% endif %}>
                                 Cast Vote
                             </button>
@@ -52,6 +52,7 @@
             </div>
         </div>
     </div>
+    {% include "vote/verify_voter.html" %}
     <script>const pollData = JSON.parse('{{ poll_data_json|escapejs }}');</script>
     <script src="{% static 'js/custom/vote_poll.js' %}"></script>
 {% endblock content %}

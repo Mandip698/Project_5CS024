@@ -6,9 +6,9 @@
             <h1 class="hero-title">Your Vote, Your Voice</h1>
             <p class="hero-subtitle">Secure, Transparent & Reliable Online Voting System</p>
             {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' %}" class="btn btn-light btn-custom">Vote Now</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-primary">Vote Now</a>
             {% else %}
-                <a href="{% url 'login_view' %}" class="btn btn-light btn-custom">Vote Now</a>
+                <a href="{% url 'login_view' %}" class="btn btn-primary">Vote Now</a>
             {% endif %}
         </div>
     </div>

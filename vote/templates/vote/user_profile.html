@@ -28,46 +28,46 @@
                             </div>
                         </div>
                         <!-- Voter ID Column -->
-                         {% if user.voter_id_image.url %}
-                        <div class="col-12 col-md-6 col-lg-4 ms-auto">
-                            <div class="text-center">
-                                <img src="{{ user.voter_id_image.url }}"
-                                     alt="Voter ID"
-                                     class="rounded mb-2"
-                                     style="max-width: 100%;
-                                            height: 150px;
-                                            object-fit: contain"
-                                     onerror="this.onerror=null;this.src='{% static 'images/card.png' %}'">
-                                <p class="mb-2">Voter ID Image</p>
-                                <div class="d-flex justify-content-center">
-                                    <div style="width: 90%">
-                                        <input type="file"
-                                               name="voter_id_image"
-                                               class="form-control form-control-sm">
+                        {% if user.voter_id_image %}
+                            <div class="col-12 col-md-6 col-lg-4 ms-auto">
+                                <div class="text-center">
+                                    <img src="{{ user.voter_id_image.url }}"
+                                         alt="Voter ID"
+                                         class="rounded mb-2"
+                                         style="max-width: 100%;
+                                                height: 150px;
+                                                object-fit: contain"
+                                         onerror="this.onerror=null;this.src='{% static 'images/card.png' %}'">
+                                    <p class="mb-2">Voter ID Image</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div style="width: 90%">
+                                            <input type="file"
+                                                   name="voter_id_image"
+                                                   class="form-control form-control-sm">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         {% else %}
-                        <div class="col-12 col-md-6 col-lg-4 ms-auto">
-                            <div class="text-center">
-                                <img src="{ % static 'images/card.png' % }"
-                                     alt="Voter ID"
-                                     class="rounded mb-2"
-                                     style="max-width: 100%;
-                                            height: 150px;
-                                            object-fit: contain"
-                                     onerror="this.onerror=null;this.src='{% static 'images/card.png' %}'">
-                                <p class="mb-2">Voter ID Image</p>
-                                <div class="d-flex justify-content-center">
-                                    <div style="width: 90%">
-                                        <input type="file"
-                                               name="voter_id_image"
-                                               class="form-control form-control-sm">
+                            <div class="col-12 col-md-6 col-lg-4 ms-auto">
+                                <div class="text-center">
+                                    <img src="{% static 'images/card.png' %}"
+                                         alt="Voter ID"
+                                         class="rounded mb-2"
+                                         style="max-width: 100%;
+                                                height: 150px;
+                                                object-fit: contain"
+                                         onerror="this.onerror=null;this.src='{% static 'images/card.png' %}'">
+                                    <p class="mb-2">Voter ID Image</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div style="width: 90%">
+                                            <input type="file"
+                                                   name="voter_id_image"
+                                                   class="form-control form-control-sm">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         {% endif %}
                     </div>
                     <!-- djlint:on H021 H006 -->
@@ -75,18 +75,20 @@
                         <!-- Profile Tab -->
                         <div class="tab-pane fade show active" id="profile" role="tabpanel">
                             <div class="mb-3">
-                                <label class="form-label">UserName</label>
+                                <label class="form-label">Username</label>
                                 <input type="text"
                                        class="form-control"
                                        name="username"
-                                       value="{{ user.username }}">
+                                       value="{{ user.username }}"
+                                       required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">First Name</label>
                                 <input type="text"
                                        class="form-control"
                                        name="first_name"
-                                       value="{{ user.first_name }}">
+                                       value="{{ user.first_name }}"
+                                       required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Middle Name</label>
@@ -100,7 +102,16 @@
                                 <input type="text"
                                        class="form-control"
                                        name="last_name"
-                                       value="{{ user.last_name }}">
+                                       value="{{ user.last_name }}"
+                                       required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">DOB</label>
+                                <input type="date"
+                                       class="form-control"
+                                       name="dob"
+                                       value="{{ user.dob|date:'Y-m-d' }}"
+                                       required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Email</label>

@@ -1,14 +1,10 @@
 {% extends "registration/base.html" %}
 {% load static %}
-
 {% load i18n jazzmin %}
 {% get_jazzmin_settings request as jazzmin_settings %}
 {% get_jazzmin_ui_tweaks as jazzmin_ui %}
-
 {% block content %}
-
-
-<style>
+    <style>
     body {
         background-color: #1f2d3d;
         font-family: 'Poppins', sans-serif;
@@ -64,69 +60,75 @@
         text-decoration: underline;
     }
 
-</style>
-
-<div class="login-container mt-5">
-    {% comment %} <div style="margin-bottom: 20px;">
-        <img src="{% static 'images/LOGO1.png' %}" alt="Voteहालः Logo" style="height: 80px;">
-    </div> {% endcomment %}
-    
-    <h1>
-        Welcome to <span class="navbar-title text-white fw-bold">Vote<span class="text-danger">हालः</span></span>
-
-    </h1>
-    <h4>Admin Area</h4>
-
-    <form action="{{ app_path }}" method="post">
-        {% csrf_token %}
-
-        {% if user.is_authenticated %}
-        <div class="errornote">
-            {% blocktrans trimmed %}
-                You are authenticated as {{ username }}, but are not authorized to access this page.
-                Would you like to login to a different account?
-            {% endblocktrans %}
+    </style>
+    <div class="login-container mt-5">
+        <!-- djlint:off H021 -->
+        <div style="margin-bottom: 20px;">
+            <img src="{% static 'images/Logo1.png' %}"
+                 alt="Voteहालः Logo"
+                 width="70"
+                 height="60"
+                 style="height: 80px">
         </div>
-        {% endif %}
-
-        {% if form.errors %}
-            {% if form.username.errors %}
-                <div class="callout-danger">{{ form.username.label }}: {{ form.username.errors|join:", " }}</div>
-            {% endif %}
-            {% if form.password.errors %}
-                <div class="callout-danger">{{ form.password.label }}: {{ form.password.errors|join:", " }}</div>
-            {% endif %}
-            {% if form.non_field_errors %}
-                <div class="callout-danger">
-                    {% for error in form.non_field_errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
+        <!-- djlint:on H021 -->
+        <h1>
+            Welcome to <span class="navbar-title text-white fw-bold">Vote<span class="text-danger">हालः</span></span>
+        </h1>
+        <h4>Admin Panel</h4>
+        <form action="{{ app_path }}" method="post">
+            {% csrf_token %}
+            {% if user.is_authenticated %}
+                <div class="errornote">
+                    {% blocktrans trimmed %}
+                        You are authenticated as {{ username }}, but are not authorized to access this page.
+                        Would you like to login to a different account?
+                    {% endblocktrans %}
                 </div>
             {% endif %}
-        {% endif %}
-
-        <div class="input-group mb-3">
-            <input type="text" name="username" class="form-control" placeholder="{{ form.username.label }}" required>
-            <div class="input-group-append">
-                <div class="input-group-text"><span class="fas fa-user"></span></div>
+            {% if form.errors %}
+                {% if form.username.errors %}
+                    <div class="callout-danger">{{ form.username.label }}: {{ form.username.errors|join:", " }}</div>
+                {% endif %}
+                {% if form.password.errors %}
+                    <div class="callout-danger">{{ form.password.label }}: {{ form.password.errors|join:", " }}</div>
+                {% endif %}
+                {% if form.non_field_errors %}
+                    <div class="callout-danger">
+                        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+            {% endif %}
+            <div class="input-group mb-3">
+                <input type="text"
+                       name="username"
+                       class="form-control"
+                       placeholder="{{ form.username.label }}"
+                       required>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-user"></span>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="input-group mb-3">
-            <input type="password" name="password" class="form-control" placeholder="{{ form.password.label }}" required>
-            <div class="input-group-append">
-                <div class="input-group-text"><span class="fas fa-lock"></span></div>
+            <div class="input-group mb-3">
+                <input type="password"
+                       name="password"
+                       class="form-control"
+                       placeholder="{{ form.password.label }}"
+                       required>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        {% url 'admin_password_reset' as password_reset_url %}
-        {% if password_reset_url %}
-        <div class="mb-3 password-reset-link">
-            <a href="{{ password_reset_url }}">{% trans "Forgotten your password or username?" %}</a>
-        </div>
-        {% endif %}
-
-        <button type="submit" class="btn btn-login btn-block">{% trans "Log in" %}</button>
-    </form>
-</div>
-{% endblock %}
+            {% url 'admin_password_reset' as password_reset_url %}
+            {% if password_reset_url %}
+                <div class="mb-3 password-reset-link">
+                    <a href="{{ password_reset_url }}">{% trans "Forgotten your password or username?" %}</a>
+                </div>
+            {% endif %}
+            <button type="submit" class="btn btn-login btn-block">{% trans "Log in" %}</button>
+        </form>
+    </div>
+{% endblock content %}
