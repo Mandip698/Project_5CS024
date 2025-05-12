@@ -100,16 +100,42 @@ def registration(request):
         return JsonResponse({'status': 'success', 'message': 'Registration successful! Check your email for login details.', 'redirect_url': reverse('login_view')})
 
 
+# @login_required
+# def dashboard(request):
+#     if 'next' in request.GET:
+#         messages.warning(request, 'User should be logged in to view this page.')
+#     polls = Poll.objects.all().order_by('-created_on')
+#     for poll in polls:
+#         if poll.end_date < timezone.now() and poll.status != "closed":
+#             poll.status = "closed"
+#             poll.save()
+#     return render(request, 'vote/dashboard.html', {'polls': polls,})
+
 @login_required
 def dashboard(request):
     if 'next' in request.GET:
         messages.warning(request, 'User should be logged in to view this page.')
+
+    # Check for a status filter from GET parameters
+    status_filter = request.GET.get('status')
+
+    # Get all polls and auto-close expired ones
     polls = Poll.objects.all().order_by('-created_on')
     for poll in polls:
         if poll.end_date < timezone.now() and poll.status != "closed":
             poll.status = "closed"
             poll.save()
-    return render(request, 'vote/dashboard.html', {'polls': polls,})
+
+    # Re-query to apply filter (after updating status)
+    if status_filter in ['live', 'closed', 'pending']:
+        polls = Poll.objects.filter(status=status_filter).order_by('-created_on')
+    else:
+        polls = Poll.objects.all().order_by('-created_on')
+
+    return render(request, 'vote/dashboard.html', {
+        'polls': polls,
+        'selected_status': status_filter,
+    })
 
 
 def contact(request):
