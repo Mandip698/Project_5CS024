@@ -58,7 +58,7 @@ class PollAdmin(admin.ModelAdmin):
     # Allow admin to search polls by topic or who created it
     search_fields = ('topic', 'created_by__username','status')
     # Add filter options for the 'status' field
-    list_filter = ('status',)
+    list_filter = ('status','created_by__username')
     # Allow editing poll options inline (related model)
 
     inlines = [OptionsInline]
