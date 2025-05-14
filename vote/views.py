@@ -23,7 +23,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import render, redirect, get_object_or_404
 from .utils import generate_random_password, generate_random_unique_id, generate_otp, send_otp, consistent_color
-
+from django.core.paginator import Paginator
 
 def index(request):
     return render(request, 'vote/index.html')
@@ -100,16 +100,50 @@ def registration(request):
         return JsonResponse({'status': 'success', 'message': 'Registration successful! Check your email for login details.', 'redirect_url': reverse('login_view')})
 
 
+# @login_required
+# def dashboard(request):
+#     if 'next' in request.GET:
+#         messages.warning(request, 'User should be logged in to view this page.')
+#     polls = Poll.objects.all().order_by('-created_on')
+#     for poll in polls:
+#         if poll.end_date < timezone.now() and poll.status != "closed":
+#             poll.status = "closed"
+#             poll.save()
+#     return render(request, 'vote/dashboard.html', {'polls': polls,})
+
 @login_required
 def dashboard(request):
     if 'next' in request.GET:
         messages.warning(request, 'User should be logged in to view this page.')
-    polls = Poll.objects.all().order_by('-created_on')
-    for poll in polls:
+
+    # Filter by status
+    status_filter = request.GET.get('status')
+    all_polls = Poll.objects.all().order_by('-created_on')
+
+    # Auto-close expired polls
+    for poll in all_polls:
         if poll.end_date < timezone.now() and poll.status != "closed":
             poll.status = "closed"
             poll.save()
-    return render(request, 'vote/dashboard.html', {'polls': polls,})
+
+    # Apply filter
+    if status_filter in ['live', 'closed', 'pending']:
+        all_polls = Poll.objects.filter(status=status_filter).order_by('-created_on')
+
+    # Pagination logic (12 per page)
+    paginator = Paginator(all_polls, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'vote/dashboard.html', {
+        'polls': page_obj,  # This is now paginated
+        'selected_status': status_filter,
+        'total_polls': paginator.count,
+        'current_showing': len(page_obj.object_list),
+        'start_index': page_obj.start_index(),
+        'end_index': page_obj.end_index(),
+        'page_obj': page_obj,  # Needed for pagination links
+    })
 
 
 def contact(request):
