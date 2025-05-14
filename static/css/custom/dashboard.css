@@ -7,12 +7,6 @@
     transition: transform 0.2s ease, filter 0.2s ease;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
-
-
-
-
-
-
 #poll-head{
     color: #17436e;
 }

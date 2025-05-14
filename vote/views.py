@@ -131,7 +131,7 @@ def dashboard(request):
         all_polls = Poll.objects.filter(status=status_filter).order_by('-created_on')
 
     # Pagination logic (12 per page)
-    paginator = Paginator(all_polls, 12)
+    paginator = Paginator(all_polls, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
