@@ -46,7 +46,19 @@ class UserAdmin(admin.ModelAdmin):
 # Inline for managing Options inside Poll
 class OptionsInline(admin.TabularInline):
     model = Option
-    extra = 2  # Default options shown when creating a poll
+    extra = 1  # Default options shown when creating a poll
+    def has_add_permission(self, request, obj):
+        if obj:  # If editing an existing Poll
+            return False
+        return True
+
+    def has_change_permission(self, request, obj=None):
+        if obj:  # Editing existing Poll — disallow option changes
+            return False
+        return True
+
+    def has_delete_permission(self, request, obj=None):
+        return False  # Always prevent deleting options in admin
 
 
 # Admin view for Poll to manage topics and options
@@ -73,29 +85,40 @@ class PollAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         })
     )
-    # Dynamically make fields read-only if the poll is already live
+    # Always read-only fields
+    base_readonly = ('created_on', 'updated_on', 'created_by', 'updated_by')
+
     def get_readonly_fields(self, request, obj=None):
-        if obj and obj.status == 'live':
-            # Make all fields readonly if status is 'live'
-            all_fields = [field.name for field in self.model._meta.fields]
-            return all_fields
-        return super().get_readonly_fields(request, obj)
-     # Customize the change form view in the admin
+        if obj:
+            if obj.status == 'closed':
+                # All fields readonly
+                return [field.name for field in self.model._meta.fields]
+            else:
+                # Only allow 'status' field to be editable
+                all_fields = [field.name for field in self.model._meta.fields]
+                return list(set(all_fields) - {'status'})
+        return self.base_readonly
+
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
         obj = self.get_object(request, object_id)
-        if obj and obj.status == 'live':
+        if obj:
             extra_context = extra_context or {}
-            extra_context['show_save'] = False
-            extra_context['show_save_and_continue'] = False
-            extra_context['show_save_and_add_another'] = False
-            messages.warning(request, "This poll is live and cannot be edited.")
+            if obj.status == 'closed':
+                extra_context['show_save'] = False
+                extra_context['show_save_and_continue'] = False
+                extra_context['show_save_and_add_another'] = False
+                messages.warning(request, "This poll is closed and cannot be edited.")
+            else:
+                messages.info(request, "Only the poll status can be modified.")
         return super().changeform_view(request, object_id, form_url, extra_context)
-     # Automatically track which admin created/updated the poll
+
     def save_model(self, request, obj, form, change):
         if not change:
             obj.created_by = request.user
         obj.updated_by = request.user
         super().save_model(request, obj, form, change)
+
+    # Optional: Prevent deletion if poll is live
     # def has_delete_permission(self, request, obj=None):
     #     if obj and obj.status == 'live':
     #         return False
