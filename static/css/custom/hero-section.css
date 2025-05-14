@@ -1,31 +1,145 @@
-/* Hero section styling with background */
+/* Section background and spacing */
 #hero-section {
-    background: url('../../images/HeroSection.png');
-    background-size: cover;
-    background-position: center;
+    background-color: #f8f9fa; /* fallback background */
     color: white;
-    height: 72.3vh;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0 30px;
+    padding: 40px 0;
 }
 
+/* Main hero container */
+#hero-section .container {
+    background-color: #9ED2DF;
+    border-radius: 10px;
+    padding: 0;
+    overflow: hidden;
+    min-height: 65vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap; /* helps with responsiveness */
+}
+
+/* Text content area */
+.hero-content {
+    background-color: #9ED2DF;
+    flex: 1;
+    padding: 60px 40px;
+    min-width: 300px;
+}
+
+/* Image section with background image */
+.hero-image {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 65vh;
+    min-width: 300px;
+    padding: 20px;
+    
+    
+}
+
+.hero-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0px;
+}
+
+
+/* Title styles */
 .hero-title {
     font-size: 2.2rem;
     font-weight: bold;
     color: black;
 }
 
+/* Subtitle styles */
 .hero-subtitle {
     font-size: 1.5rem;
     margin-bottom: 20px;
     color: black;
 }
 
-/* .btn-custom {
+/* Custom button */
+.btn-custom {
     font-size: 1.2rem;
     padding: 12px 30px;
     border-radius: 8px;
     margin-right: 10px;
-} */
+    background-color: #164774;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.btn-custom:hover {
+    opacity: 0.8;
+}
+
+/* Optional: Responsive behavior for smaller screens */
+@media (max-width: 768px) {
+    #hero-section .container {
+        flex-direction: column;
+    }
+
+    .hero-image {
+        min-height: 300px;
+        width: 100%;
+    }
+
+    .hero-content {
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+    .btn-custom {
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+
+
+/* Medium screens and below */
+@media (max-width: 992px) {
+    #hero-section .container {
+        flex-direction: column;
+    }
+
+    .hero-content, .hero-image {
+        flex: 1 1 100%;
+        text-align: center;
+    }
+
+    .hero-content {
+        padding: 40px 30px;
+    }
+
+    .btn-custom {
+        margin: 20px auto 0;
+        display: inline-block;
+    }
+}
+
+/* Small devices (phones) */
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 1.8rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .hero-content {
+        padding: 30px 20px;
+    }
+
+    .btn-custom {
+        font-size: 1rem;
+        padding: 10px 20px;
+        width: 100%;
+    }
+}

@@ -25,6 +25,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .utils import generate_random_password, generate_random_unique_id, generate_otp, send_otp, consistent_color
 
 
+
 def index(request):
     return render(request, 'vote/index.html')
 
@@ -98,7 +99,7 @@ def registration(request):
             user.delete()  # Rollback user creation if email fails
             return JsonResponse({'status': 'error', 'message': f'Failed to send email to {user.email}: {e}'}, status=500)
         return JsonResponse({'status': 'success', 'message': 'Registration successful! Check your email for login details.', 'redirect_url': reverse('login_view')})
-
+    
 
 @login_required
 def dashboard(request):
@@ -109,7 +110,7 @@ def dashboard(request):
         if poll.end_date < timezone.now() and poll.status != "closed":
             poll.status = "closed"
             poll.save()
-    return render(request, 'vote/dashboard.html', {'polls': polls,})
+    return render(request, 'vote/dashboard.html', {'polls': polls})
 
 
 def contact(request):
@@ -160,8 +161,22 @@ def user_profile(request):
         upload_dir = os.path.join(settings.BASE_DIR, 'static/images/user_images/')
         os.makedirs(upload_dir, exist_ok=True)
         fs = FileSystemStorage(location=upload_dir)
+        user.dob = request.POST.get('dob')
+
+        upload_dir = os.path.join(settings.BASE_DIR, 'static/images/user_images/')
+        os.makedirs(upload_dir, exist_ok=True)
+        fs = FileSystemStorage(location=upload_dir)
 
         # Update the avatar and voter ID image 
+        if 'avatar' in request.FILES:
+            avatar_file = request.FILES['avatar']
+            avatar_name = fs.save(avatar_file.name, avatar_file)
+            user.avatar = f'user_images/{avatar_name}'
+
+        if 'voter_id_image' in request.FILES:
+            voter_id_file = request.FILES['voter_id_image']
+            voter_id_name = fs.save(voter_id_file.name, voter_id_file)
+            user.voter_id_image = f'user_images/{voter_id_name}'
         if 'avatar' in request.FILES:
             avatar_file = request.FILES['avatar']
             avatar_name = fs.save(avatar_file.name, avatar_file)
@@ -214,6 +229,9 @@ def verify_otp(request):
         # Getting submitted data
         uidb64 = request.session.get("otp_uid")
         token = request.session.get("otp_token")
+        # Getting submitted data
+        uidb64 = request.session.get("otp_uid")
+        token = request.session.get("otp_token")
         otp_input = request.POST.get("otp", "")
 
         def error_response(msg):
@@ -221,14 +239,19 @@ def verify_otp(request):
 
         try:
             # Decode UID and retrieve the user
+            # Decode UID and retrieve the user
             uid = urlsafe_base64_decode(uidb64).decode()
             user = User.objects.get(pk=uid)
         except (User.DoesNotExist, ValueError, TypeError):
             return error_response("Invalid user.")
         
         # Check if token is still valid
+        
+        # Check if token is still valid
         if not default_token_generator.check_token(user, token):
             return error_response("Invalid or expired token.")
+        
+        # Fetch stored OTP and creation time from session
         
         # Fetch stored OTP and creation time from session
         session_key = f'otp_{uidb64}_{token}'
@@ -239,31 +262,47 @@ def verify_otp(request):
         print("Stored OTP in session:", stored_otp)
         print("Session keys:", list(request.session.keys()))  # Print all session keys for debugging
         
+        
+        # Debugging: Check what's in the session for OTP
+        print("Stored OTP in session:", stored_otp)
+        print("Session keys:", list(request.session.keys()))  # Print all session keys for debugging
+        
         if not stored_otp:
             return error_response("OTP expired or not found.")
+        
+        # Check if the OTP is still within the valid time window
         
         # Check if the OTP is still within the valid time window
         otp_creation_str = request.session.get(otp_creation_key)
         if otp_creation_str:
             otp_creation_time = parse_datetime(otp_creation_str)
             print("OTP creation time:", otp_creation_time)  # Debugging
-            if timezone.now() > otp_creation_time + timedelta(seconds=120):  # OTP expiry after 2 minutes
+            print("OTP creation time:", otp_creation_time)  # Debugging
+            if timezone.now() > otp_creation_time + timedelta(seconds=120):  # OTP expiry after 2 minutes  # OTP expiry after 2 minutes
                 return error_response("OTP has expired.")
+
 
         if otp_input != stored_otp :
             return error_response("Incorrect OTP.")
+        
+        # Clean up session keys once OTP is used
         
         # Clean up session keys once OTP is used
         request.session.pop(session_key, None)
         request.session.pop(otp_creation_key, None)
         
         # Log the user in
+        
+        # Log the user in
         login(request, user)
         messages.success(request, f'Welcome {user.first_name}! You have logged in successfully.')
 
         # Redirect to password change page if required
+
+        # Redirect to password change page if required
         if user.change_password:
             return JsonResponse({'success': True, 'redirect_url': reverse('change_password')})
+
 
         return JsonResponse({'success': True, 'redirect_url': reverse('dashboard')})
 
