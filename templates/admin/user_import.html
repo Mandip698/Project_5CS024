@@ -2,7 +2,7 @@
 {% load static %}
 {% block object-tools-items %}
     {{ block.super }}
-    <a href="{% url 'admin:import_users' %}" class="addlink">Import Users</a>
-    <button type="button" class="btn btn-success"><a href="https://project-5cs024.onrender.com/dashboard/" class="button" target="_blank">
-                    GoTo VoteHala</a></button>
+    <a href="{% url 'admin:import_users' %}"
+       class="addlink btn btn-outline-danger">Import Users</a>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-warning">Visit Site</a>
 {% endblock object-tools-items %}
