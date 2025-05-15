@@ -1,0 +1,30 @@
+{% load static %}
+<div class="modal fade"
+     id="voterModal"
+     tabindex="-1"
+     aria-labelledby="voterModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="voterModalLabel">Verify Voter</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="voterForm" method="post" action="{% url 'verify_voter' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="voter" class="form-label">Enter Voter Id</label>
+                        <input type="text" name="voter" id="voter" class="form-control" required />
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <button type="submit" class="btn btn-primary">Verify</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

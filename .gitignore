@@ -1,11 +1,10 @@
 env
-db.sqlite3
-.vscode
 .env
-credentials.json
-token.pickle
-vote/migrations/*
+Reports
+.vscode
+db.sqlite3
 vote/__pycache__
+vote/migrations/*
 voting_app/__pycache__/*
+static/images/user_images/*
 vote/management/commands/__pycache__/*
-UserData.xlsx

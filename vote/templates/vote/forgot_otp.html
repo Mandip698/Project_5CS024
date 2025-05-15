@@ -1,0 +1,40 @@
+{% load static %}
+<div class="modal fade"
+     id="forgotOtpModal"
+     tabindex="-1"
+     aria-labelledby="forgotOtpModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="forgotOtpModalLabel">Verify OTP</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="forgotOtpForm"
+                      method="post"
+                      action="{% url 'reset_password_after_otp' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="uid" value="" />
+                    <input type="hidden" name="token" value="" />
+                    <div class="mb-3">
+                        <label for="forgotOtp" class="form-label">Enter OTP</label>
+                        <input type="text"
+                               name="forgotOtp"
+                               id="forgotOtp"
+                               class="form-control"
+                               required />
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <button type="submit" class="btn btn-primary">Verify</button>
+                        {% comment %} <button type="button" id="resendBtn" class="btn btn-link">Resend OTP</button> {% endcomment %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/custom/forgot_otp.js' %}"></script>

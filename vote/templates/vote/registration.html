@@ -1,0 +1,122 @@
+{% extends "main.html" %}
+{% block content %}
+    {% load static %}
+    <div class="container py-5">
+        <!-- Form Card -->
+        <div class="d-flex justify-content-center">
+            <div class="card shadow card-narrow">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person"></i> Voter Registration Form
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="voterForm">
+                        {% csrf_token %}
+                        <!-- First Name -->
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">
+                                First Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="firstName" />
+                            <span class="error-message text-danger small"></span>
+                        </div>
+                        <!-- Middle Name -->
+                        <div class="mb-3">
+                            <label for="middleName" class="form-label">Middle Name</label>
+                            <input type="text" class="form-control" id="middleName" />
+                            <span class="error-message text-danger small"></span>
+                        </div>
+                        <!-- Last Name -->
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">
+                                Last Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="lastName" />
+                            <span class="error-message text-danger small"></span>
+                        </div>
+                        <!-- Username -->
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                Username <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="username" />
+                            <span class="error-message text-danger small"></span>
+                        </div>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                Email <span class="text-danger">*</span>
+                            </label>
+                            <input type="email" class="form-control" id="email" />
+                            <span class="error-message text-danger small"></span>
+                        </div>
+                        <!-- Date of Birth -->
+                        <div class="mb-3">
+                            <label for="dob" class="form-label">
+                                Date of Birth <span class="text-danger">*</span>
+                            </label>
+                            <input type="date" class="form-control" id="dob" />
+                            <span class="error-message text-danger small"></span>
+                        </div>
+                        <!-- Photo Upload -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-camera"></i> User Photo <span class="text-danger">*</span>
+                            </label>
+                            <div id="drop-area"
+                                 class="upload-box upload-box-narrow border rounded d-flex justify-content-center align-items-center flex-column p-4 text-center">
+                                <input type="file" id="userPhotoUpload" accept="image/*" hidden />
+                                <span class="error-message text-danger small"></span>
+                                <div class="upload-icon mb-2">
+                                    <i class="bi bi-upload fs-1"></i>
+                                </div>
+                                <p>
+                                    Drag & drop your photo here or
+                                    <span class="text-primary text-decoration-underline" id="clickToBrowse">click to browse</span>
+                                </p>
+                                <small class="text-muted">Please upload a recent photo (max 2MB)</small>
+                                <!-- Preview Image -->
+                                <img id="userPhotoPreview"
+                                     src=""
+                                     alt="User Photo Preview"
+                                     width="150"
+                                     height="auto" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-camera"></i> Voter Card Image <span class="text-danger">*</span>
+                            </label>
+                            <div id="drop-area"
+                                 class="upload-box upload-box-narrow border rounded d-flex justify-content-center align-items-center flex-column p-4 text-center">
+                                <input type="file" id="voterCardUpload" accept="image/*" hidden />
+                                <span class="error-message text-danger small"></span>
+                                <div class="upload-icon mb-2">
+                                    <i class="bi bi-upload fs-1"></i>
+                                </div>
+                                <p>
+                                    Drag & drop your voter card image here or
+                                    <span class="text-primary text-decoration-underline" id="clickToBrowse">click to browse</span>
+                                </p>
+                                <small class="text-muted">Please upload voter card image (max 2MB)</small>
+                                <!-- Preview Image -->
+                                <img id="voterCardPreview"
+                                     src=""
+                                     alt="Photo Preview"
+                                     width="150"
+                                     height="auto" />
+                            </div>
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary px-4">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- JS -->
+    <script src="{% static 'js/custom/registration.js' %}"></script>
+{% endblock content %}

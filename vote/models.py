@@ -10,8 +10,10 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, null=True)
     avatar = models.ImageField(null=True, default="avatar.svg")
     middle_name = models.CharField(max_length=100, null=True, blank=True)
+    dob = models.DateField(null=True, blank=True)
     voter_id = models.CharField(max_length=100, unique=True, null=True, blank=True) 
-    voter_id_image = models.ImageField(null=True, blank=True)
+    voter_id_image = models.ImageField(null=True, blank=True, default="card.png")
+    change_password = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username','first_name','last_name', 'voter_id']
@@ -49,12 +51,14 @@ class UserVote(models.Model):
     """
     Records a user's vote for a specific option in a poll.
     """
-    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    option = models.ForeignKey(Option, null=True,on_delete=models.CASCADE)
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE) # links the vote to a specific poll
+    user = models.ForeignKey(User, on_delete=models.CASCADE) # links the vote to the user who casts it
+    option = models.ForeignKey(Option, null=True,on_delete=models.CASCADE) # Links to the specific option the user chose
     timestamp = models.DateTimeField(auto_now_add=True)
-
+    
+    # A user can vote only once in each poll.
     class Meta:
+        # list of constraints 
         constraints = [
             models.UniqueConstraint(fields=['poll', 'user'], name='unique_vote_per_user_per_poll')
         ]

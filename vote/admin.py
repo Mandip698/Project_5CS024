@@ -1,9 +1,10 @@
+import sys
+import subprocess
 from django.urls import path
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib import admin
 from .models import User, Poll, Option, UserVote
-import subprocess
 
 
 admin.site.site_header = "Voteहालः"
@@ -25,14 +26,12 @@ class UserAdmin(admin.ModelAdmin):
     def import_users(self, request):
         try:
             result = subprocess.run(
-                ["python", "manage.py", "import_users"],
+                [sys.executable, "manage.py", "import_users"],
                 capture_output=True,
                 text=True,
-            )
-    
+            )    
             stdout_msg = result.stdout.strip()
             stderr_msg = result.stderr.strip()
-    
             if result.returncode == 0:
                 messages.success(request, stdout_msg or "Users imported successfully.")
             else:
@@ -52,12 +51,18 @@ class OptionsInline(admin.TabularInline):
 
 # Admin view for Poll to manage topics and options
 class PollAdmin(admin.ModelAdmin):
+    # Fields to show in the admin list view for polls
     list_display = ('topic', 'start_date', 'end_date', 'status', 'created_by', 'updated_by', 'created_on', 'updated_on')
+    # Fields that are always read-only in the form
     readonly_fields = ('created_on', 'updated_on','created_by', 'updated_by')
-    search_fields = ('topic', 'created_by')
-    list_filter = ('status',)
-    inlines = [OptionsInline]
+    # Allow admin to search polls by topic or who created it
+    search_fields = ('topic', 'created_by__username','status')
+    # Add filter options for the 'status' field
+    list_filter = ('status','created_by__username')
+    # Allow editing poll options inline (related model)
 
+    inlines = [OptionsInline]
+     # Organize the form fields into sections in the admin panel
     fieldsets = (
         (None, {
             'fields': ('topic', 'description', 'start_date', 'end_date', 'status', 'created_by', 'updated_by')
@@ -68,12 +73,34 @@ class PollAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         })
     )
+    # Dynamically make fields read-only if the poll is already live
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.status == 'live':
+            # Make all fields readonly if status is 'live'
+            all_fields = [field.name for field in self.model._meta.fields]
+            return all_fields
+        return super().get_readonly_fields(request, obj)
+     # Customize the change form view in the admin
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        obj = self.get_object(request, object_id)
+        if obj and obj.status == 'live':
+            extra_context = extra_context or {}
+            extra_context['show_save'] = False
+            extra_context['show_save_and_continue'] = False
+            extra_context['show_save_and_add_another'] = False
+            messages.warning(request, "This poll is live and cannot be edited.")
+        return super().changeform_view(request, object_id, form_url, extra_context)
+     # Automatically track which admin created/updated the poll
     def save_model(self, request, obj, form, change):
         if not change:
             obj.created_by = request.user
         obj.updated_by = request.user
         super().save_model(request, obj, form, change)
-        
+    # def has_delete_permission(self, request, obj=None):
+    #     if obj and obj.status == 'live':
+    #         return False
+    #     return super().has_delete_permission(request, obj)
+
         
 # Registering the models
 admin.site.register(User, UserAdmin)

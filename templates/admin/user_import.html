@@ -1,3 +1,8 @@
-{% extends "admin/change_list.html" %} {% load static %} {% block object-tools-items %} {{ block.super }}
-<a href="{% url 'admin:import_users' %}" class="addlink">Import Users</a>
-{% endblock %}
+{% extends "admin/change_list.html" %}
+{% load static %}
+{% block object-tools-items %}
+    {{ block.super }}
+    <a href="{% url 'admin:import_users' %}" class="addlink">Import Users</a>
+    <button type="button" class="btn btn-success"><a href="https://project-5cs024.onrender.com/dashboard/" class="button" target="_blank">
+                    GoTo VoteHala</a></button>
+{% endblock object-tools-items %}

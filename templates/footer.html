@@ -5,7 +5,8 @@
             <!-- Company Links -->
             <div class="col-md-2 mb-4">
                 <h4 class="fw-bold text-center">
-                    <a href="#" class="text-light text-decoration-none footer-btn">About Us</a>
+                    <a href="{% url 'about' %}"
+                       class="text-light text-decoration-none footer-btn">About Us</a>
                 </h4>
             </div>
             <div class="col-md-8 mb-10">
@@ -23,12 +24,15 @@
             </div>
             <div class="col-md-2 mb-4">
                 <h4 class="fw-bold text-center">
-                    <a href="#" class="text-light text-decoration-none footer-btn">Contact</a>
+                    <a href="{% url 'contact' %}"
+                       class="text-light text-decoration-none footer-btn">Contact</a>
                 </h4>
             </div>
         </div>
         <div class="text-center mt-4">
-            <p class="mb-0">&copy; 2025 | All rights reserved</p>
+            <p class="mb-0">
+                ©  Vote<span class="text-danger">हालः</span> 2025 | All rights reserved
+            </p>
         </div>
     </div>
 </footer>

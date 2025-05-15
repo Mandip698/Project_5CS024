@@ -1,0 +1,155 @@
+{% extends "main.html" %}
+{% block content %}
+    {% load static %}
+    <div class="container my-5 about-section pb-3">
+        <h2 class="text-primary text-center fw-bold">Who We Are</h2>
+        <p class="lead text-center pb-md-5">
+            <strong>Voteहालः</strong> is a secure, reliable, and user-friendly online voting platform designed to make the democratic process accessible to everyone.
+        </p>
+        <h2 class="text-primary text-center fw-bold">Our Mission</h2>
+        <p class="lead text-center">
+            Our mission is to empower people by simplifying the voting process using modern technology.
+        </p>
+    </div>
+    <!-- Why Choose Voteहालः Section -->
+    <section class="why-vote-section">
+        <div class="container">
+            <h2 class="text-primary text-center fw-bold">
+                Why Choose Vote<span class="text-danger">हालः</span>?
+            </h2>
+            <p class="lead text-center pb-md-5">Secure, transparent, and designed for all – revolutionizing online voting.</p>
+            <div class="row g-4 justify-content-center">
+                <!-- Card 1 -->
+                <div class="col-md-4">
+                    <div class="feature-card h-100">
+                        <div class="feature-icon text-warning">
+                            <i class="bi bi-shield-lock-fill"></i>
+                        </div>
+                        <h5 class="fw-semibold">Secure & Encrypted</h5>
+                        <p>Bank-level encryption and blockchain technology ensure your votes remain secure and tamper-proof.</p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="col-md-4">
+                    <div class="feature-card h-100">
+                        <div class="feature-icon text-info">
+                            <i class="bi bi-universal-access"></i>
+                        </div>
+                        <h5 class="fw-semibold">Accessible to All</h5>
+                        <p>Our platform is designed for everyone, with accessibility features that accommodate various needs.</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="col-md-4">
+                    <div class="feature-card h-100">
+                        <div class="feature-icon text-success">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                        <h5 class="fw-semibold">Transparent Results</h5>
+                        <p>Real-time counting and public verification systems ensure complete transparency in every vote.</p>
+                    </div>
+                </div>
+                <!-- Meet Our Team Section -->
+                <section class="team-section py-5 bg-light">
+                    <div class="container">
+                        <h2 class="text-center text-primary mb-5">Meet Our Team</h2>
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
+                            <!-- Team Member -->
+                            <div class="col">
+                                <div class="card h-20 text-center team-card">
+                                    <img src="{% static 'images/team/98.png' %}"
+                                         height="auto"
+                                         width="100"
+                                         class="card-img-top"
+                                         alt="Anisha Maharjan">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Sara Deshar</h5>
+                                        <p class="card-text">Project Manager</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card h-20 text-center team-card">
+                                    <img src="{% static 'images/team/34.png' %}"
+                                         height="auto"
+                                         width="100"
+                                         class="card-img-top"
+                                         alt="Aayush Sharma">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Durga Rahun Magar</h5>
+                                        <p class="card-text">Business Analyst</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card h-20 text-center team-card">
+                                    <img src="{% static 'images/team/46.png' %}"
+                                         height="auto"
+                                         width="100"
+                                         class="card-img-top"
+                                         alt="Sneha Koirala">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Jeshmin Dhital</h5>
+                                        <p class="card-text">Frontend Developer</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card h-20 text-center team-card">
+                                    <img src="{% static 'images/team/47.png' %}"
+                                         height="auto"
+                                         width="100"
+                                         class="card-img-top"
+                                         alt="Rajan Shrestha">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Aryush Khatri</h5>
+                                        <p class="card-text">Backend Developer</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card h-20 text-center team-card">
+                                    <img src="{% static 'images/team/97.png' %}"
+                                         height="auto"
+                                         width="100"
+                                         class="card-img-top"
+                                         alt="Bikash Thapa">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Isha Bhatta</h5>
+                                        <p class="card-text">Frontend Developer</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card h-20 text-center team-card">
+                                    <img src="{% static 'images/team/37.png' %}"
+                                         height="auto"
+                                         width="100"
+                                         class="card-img-top"
+                                         alt="Sujan Gurung">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Mandeep Panta</h5>
+                                        <p class="card-text">Backend Developer</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card h-20 text-center team-card">
+                                    <img src="{% static 'images/team/18.png' %}"
+                                         height="auto"
+                                         width="100"
+                                         class="card-img-top"
+                                         alt="Sujan Gurung">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Ankit Guragain</h5>
+                                        <p class="card-text">Frontend Developer</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

@@ -1,0 +1,172 @@
+/* Contact Sections Layout */
+.contact-sections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 0 -15px;
+}
+
+.contact-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    flex: 1;
+    min-width: 300px;
+}
+
+/* Shared Contact Styles */
+.contact-header {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.contact-intro {
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.info-title {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.info-description {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.info-detail {
+    color: #34495e;
+    margin-bottom: 20px;
+}
+
+.info-detail strong {
+    color: #2c3e50;
+}
+
+.divider {
+    border-top: 2px solid #eee;
+    margin: 25px 0;
+}
+
+/* Form Section */
+.form-section {
+    padding: 20px 0;
+}
+
+.form-label {
+    color: #2c3e50;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+}
+
+.message-box {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.send-btn {
+    margin-top: 10px;
+    padding: 10px 25px;
+    font-weight: 500;
+    background-color: #3498db;
+    border: none;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.send-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .contact-sections {
+        flex-direction: column;
+    }
+
+    .contact-card {
+        width: 100%;
+    }
+}
+
+.social-links {
+    gap: 80px;
+}
+
+.social-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: white;
+    font-size: 24px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Platform colors */
+.social-logo.discord {
+    background-color: #5865F2;
+}
+
+.social-logo.instagram {
+    background: linear-gradient(45deg, #405DE6, #833AB4, #C13584, #E1306C, #FD1D1D);
+}
+
+.social-logo.linkedin {
+    background-color: #0077B5;
+}
+
+.social-logo.facebook {
+    background-color: #1877F2;
+}
+
+/* Hover effects */
+.social-logo:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Tooltip-like appearance on hover */
+.social-logo:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .social-logo {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+}

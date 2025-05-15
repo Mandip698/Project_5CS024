@@ -1,19 +1,16 @@
-/* Navbar container */
 .navbar {
     display: flex;
     justify-content: space-between;
-    /* Adjust if needed */
     align-items: center;
     padding: 0.5rem 1rem;
+    background-color: #17436e
 }
 
 .navbar-title {
     font-size: 2.5rem;
-    /* Adjust as needed */
     letter-spacing: 1px;
 }
 
-/* Avatar Image as Dropdown Toggle */
 .avatar {
     width: 40px;
     height: 40px;
@@ -26,25 +23,21 @@
     opacity: 0.8;
 }
 
-/* Dropdown Menu */
 .dropdown-menu {
     min-width: 150px;
     border-radius: 8px;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Optional icon sizing inside dropdown */
 .dropdown-item i {
     font-size: 1rem;
 }
 
-/* Navigation Links */
 .nav-links {
     display: flex;
     gap: 20px;
 }
 
-/* Login and SignUp Button Styles (adjust if needed) */
 .navbar .btn {
     padding: 5px 15px;
     border-radius: 10px;
