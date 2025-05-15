@@ -60,6 +60,16 @@ JAZZMIN_SETTINGS = {
     "copyright": "Voteहालः",
     "show_ui_builder": True,
     "custom_css": "css/custom/admin_logo.css",
+    "usermenu_links": [
+        {
+            "name": "GoTo Voteहालः",
+            "url": "https://project-5cs024.onrender.com/dashboard/",
+            "icon": "fas fa-vote-yea",  # <--- this is the key part
+            "new_window": True,
+        },
+    ],
+
+ 
     # App and model icons
     "icons": {
         "vote.User": "fas fa-user",
