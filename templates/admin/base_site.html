@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block branding %}
+  <h1 id="site-name">
+    <a href="{% url 'admin:index' %}">Voteहालः Admin Area</a>
+    <a href="https://project-5cs024.onrender.com/dashboard/" 
+       target="_blank" 
+       class="button" 
+       style="margin-left: 20px; padding: 4px 8px; background: #0073aa; color: white; border-radius: 4px; font-size: 14px; text-decoration: none;">
+       🌐 GoTo Voteहालः
+    </a>
+  </h1>
+{% endblock %}
