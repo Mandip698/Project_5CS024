@@ -86,3 +86,32 @@
     color: white;
 }
 
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* Hide nav links initially */
+        flex-direction: column;
+        background-color: #17436e;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        width: 200px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .navbar {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .menu-toggle {
+        display: block;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: white;
+    }
+}

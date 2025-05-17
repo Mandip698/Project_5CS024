@@ -36,3 +36,7 @@
 .error-message {
 	font-size: 0.875em;
 }
+
+.logo-img {
+    max-height: 50px;
+}

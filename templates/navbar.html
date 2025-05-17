@@ -1,61 +1,60 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg shadow-sm">
-    <div class="container d-flex justify-content-between align-items-center">
-        <!-- Logo on the Left -->
-        <a class="navbar-brand d-flex align-items-center"
-           href="{% url 'index' %}">
-            <img src="{% static 'images/Logo1.png' %}"
-                 alt="Logo"
-                 width="50"
-                 height="50"
-                 class="me-2" />
+    <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
+            <img src="{% static 'images/Logo1.png' %}" alt="Logo" width="50" height="50" class="me-2" />
         </a>
-        <!-- Title in the Center -->
-        <div class="mx-auto text-center">
-            <a href="{% url 'dashboard' %}" class="text-decoration-none">
-                <span class="navbar-title text-white fw-bold"> Vote<span class="text-danger">हालः</span> </span>
-            </a>
-        </div>
-        <!-- Right Side Content (Login or Profile) -->
-        <div class="d-flex align-items-center">
-            {% if user.is_authenticated %}
-                <div class="dropdown">
-                    <img src="{{ user.avatar.url }}"
-                         alt="Avatar"
-                         class="avatar dropdown-toggle"
-                         role="button"
-                         data-bs-toggle="dropdown"
-                         aria-expanded="false"
-                         height="50"
-                         width="50"
-                         onerror="this.onerror=null; this.src='{% static "images/avatar.svg" %}';" />
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="{% url 'user-profile' %}">Profile</a>
-                        </li>
-                        {% if user.is_staff %}
-                            <li>
-                                <a class="dropdown-item" href="{% url 'admin:index' %}">Admin Panel</a>
-                            </li>
-                        {% endif %}
-                        <li>
-                            <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
-                        </li>
-                    </ul>
-                </div>
-                <h4>{{ user.username }}</h4>
-            {% else %}
-                {% if request.resolver_match.url_name == 'index' %}
-                    <a class="register-btn" href="{% url 'registration' %}">SignUp</a>
-                    <div class="vr mx-2"></div>
-                    <a class="login-btn" href="{% url 'login_view' %}">Login</a>
+
+        <!-- Toggler Button for Mobile -->
+        <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Collapsible Content -->
+        <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarContent">
+            <!-- Center Title -->
+            <div class="mx-auto text-center">
+                <a href="{% url 'dashboard' %}" class="text-decoration-none">
+                    <span class="navbar-title text-white fw-bold">Vote<span class="text-danger">हालः</span></span>
+                </a>
+            </div>
+
+            <!-- Right Side (Login/Profile) -->
+            <div class="d-flex align-items-center">
+                {% if user.is_authenticated %}
+                    <div class="dropdown me-2">
+                        <img src="{{ user.avatar.url }}"
+                             alt="Avatar"
+                             class="avatar dropdown-toggle"
+                             role="button"
+                             data-bs-toggle="dropdown"
+                             aria-expanded="false"
+                             height="50"
+                             width="50"
+                             onerror="this.onerror=null; this.src='{% static "images/avatar.svg" %}';" />
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'user-profile' %}">Profile</a></li>
+                            {% if user.is_staff %}
+                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin Panel</a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Log Out</a></li>
+                        </ul>
+                    </div>
+                    <h4 class="text-white">{{ user.username }}</h4>
+                {% else %}
+                    {% if request.resolver_match.url_name == 'index' %}
+                        <a class="register-btn" href="{% url 'registration' %}">SignUp</a>
+                        <div class="vr mx-2 text-white"></div>
+                        <a class="login-btn" href="{% url 'login_view' %}">Login</a>
+                    {% elif request.resolver_match.url_name == 'login_view' %}
+                        <a class="register-btn" href="{% url 'registration' %}">SignUp</a>
+                    {% elif request.resolver_match.url_name == 'registration' %}
+                        <a class="login-btn" href="{% url 'login_view' %}">Login</a>
+                    {% endif %}
                 {% endif %}
-                {% if request.resolver_match.url_name == 'login_view' %}
-                    <a class="register-btn" href="{% url 'registration' %}">SignUp</a>
-                {% elif request.resolver_match.url_name == 'registration' %}
-                    <a class="login-btn" href="{% url 'login_view' %}">Login</a>
-                {% endif %}
-            {% endif %}
+            </div>
         </div>
     </div>
 </nav>
