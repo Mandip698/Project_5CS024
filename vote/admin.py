@@ -128,4 +128,4 @@ class PollAdmin(admin.ModelAdmin):
 # Registering the models
 admin.site.register(User, UserAdmin)
 admin.site.register(Poll, PollAdmin)
-admin.site.register(UserVote)
+# admin.site.register(UserVote)
